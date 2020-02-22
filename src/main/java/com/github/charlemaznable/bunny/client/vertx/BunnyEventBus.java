@@ -16,6 +16,7 @@ import com.github.charlemaznable.bunny.client.domain.PaymentRollbackResponse;
 import com.github.charlemaznable.core.codec.NonsenseSignature;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
+import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.EventBus;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,13 +40,12 @@ public final class BunnyEventBus {
     private NonsenseSignature nonsenseSignature = new NonsenseSignature();
 
     @Autowired(required = false)
-    public BunnyEventBus(VertxInitializer initializer) {
-        this(initializer, getMiner(BunnyClientConfig.class));
+    public BunnyEventBus(Vertx vertx) {
+        this(vertx, getMiner(BunnyClientConfig.class));
     }
 
     @Autowired(required = false)
-    public BunnyEventBus(VertxInitializer initializer, BunnyClientConfig bunnyClientConfig) {
-        val vertx = checkNotNull(initializer).vertx();
+    public BunnyEventBus(Vertx vertx, BunnyClientConfig bunnyClientConfig) {
         this.eventBus = checkNotNull(vertx).eventBus();
         this.bunnyClientConfig = checkNotNull(bunnyClientConfig);
     }

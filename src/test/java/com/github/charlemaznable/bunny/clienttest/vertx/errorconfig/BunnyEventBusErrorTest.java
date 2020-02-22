@@ -1,12 +1,15 @@
 package com.github.charlemaznable.bunny.clienttest.vertx.errorconfig;
 
 import com.github.charlemaznable.bunny.client.domain.CalculateRequest;
+import com.github.charlemaznable.bunny.client.domain.CalculateResponse;
 import com.github.charlemaznable.bunny.client.domain.ChargeRequest;
 import com.github.charlemaznable.bunny.client.domain.PaymentAdvanceRequest;
+import com.github.charlemaznable.bunny.client.domain.PaymentAdvanceResponse;
 import com.github.charlemaznable.bunny.client.vertx.BunnyEventBus;
 import com.github.charlemaznable.bunny.client.vertx.BunnyEventBusException;
 import io.vertx.core.CompositeFuture;
 import io.vertx.core.Future;
+import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.ReplyException;
 import io.vertx.junit5.VertxExtension;
 import io.vertx.junit5.VertxTestContext;
@@ -19,9 +22,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.HashMap;
 
-import static com.github.charlemaznable.bunny.clienttest.vertx.errorconfig.BunnyEventBusErrorConfiguration.READY;
+import static com.github.charlemaznable.core.codec.Json.json;
 import static com.github.charlemaznable.core.lang.Listt.newArrayList;
-import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -31,11 +33,28 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class BunnyEventBusErrorTest {
 
     @Autowired
+    private Vertx vertx;
+    @Autowired
     private BunnyEventBus bunnyEventBus;
 
     @Test
     public void testBunnyEventBusError(VertxTestContext test) {
-        await().forever().until(() -> READY);
+        val eventBus = vertx.eventBus();
+        eventBus.<String>consumer("/rabbit/calculate", message -> {
+            val resp = new CalculateResponse();
+            resp.setChargingType("error");
+            resp.setRespCode("OK");
+            resp.setRespDesc("SUCCESS");
+            resp.setCalcResult("calcResult");
+            resp.setCalcResultUnit("calcResultUnit");
+            message.reply(json(resp));
+        });
+        eventBus.<String>consumer("/rabbit/payment/advance", message -> {
+            val resp = new PaymentAdvanceResponse();
+            resp.setRespCode("ERROR");
+            resp.setRespDesc("FAILURE");
+            message.reply(json(resp));
+        });
 
         CompositeFuture.all(newArrayList(
                 Future.<Void>future(f -> {

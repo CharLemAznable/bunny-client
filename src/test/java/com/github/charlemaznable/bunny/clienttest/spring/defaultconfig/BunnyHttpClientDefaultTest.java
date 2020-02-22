@@ -42,9 +42,9 @@ public class BunnyHttpClientDefaultTest {
     private static final String PAYMENT_ID = "paymentId";
     private static final String BALANCE = "balance";
     private static final String UNIT = "unit";
+    private NonsenseSignature nonsenseSignature = new NonsenseSignature();
     @Autowired
     private BunnyHttpClient bunnyHttpClient;
-    private NonsenseSignature nonsenseSignature = new NonsenseSignature();
 
     @SneakyThrows
     @Test
