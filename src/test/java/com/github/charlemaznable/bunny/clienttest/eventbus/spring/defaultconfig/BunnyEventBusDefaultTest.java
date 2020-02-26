@@ -4,7 +4,6 @@ import com.github.charlemaznable.bunny.client.eventbus.BunnyEventBus;
 import io.vertx.core.Vertx;
 import io.vertx.junit5.VertxExtension;
 import io.vertx.junit5.VertxTestContext;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,15 +18,12 @@ import static com.github.charlemaznable.bunny.clienttest.mock.MockEventBusConsum
 public class BunnyEventBusDefaultTest {
 
     @Autowired
+    private Vertx vertx;
+    @Autowired
     private BunnyEventBus bunnyEventBus;
 
-    @BeforeAll
-    public static void beforeAll(Vertx vertx) {
-        BunnyEventBusDefaultConfiguration.vertx = vertx;
-    }
-
     @Test
-    public void testBunnyEventBus(Vertx vertx, VertxTestContext test) {
+    public void testBunnyEventBus(VertxTestContext test) {
         testDefaultConsumer(vertx, bunnyEventBus, test);
     }
 }

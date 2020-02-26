@@ -15,16 +15,14 @@ import static org.joor.Reflect.on;
 @BunnyEventBusImport
 public class BunnyEventBusDefaultConfiguration {
 
-    static Vertx vertx;
-
-    @Bean
-    public Vertx vertx() {
-        return vertx;
-    }
-
     @PostConstruct
     public void postConstruct() {
         on(springMinerLoader()).field("minerCache").call("invalidateAll");
         on(springOhLoader()).field("ohCache").call("invalidateAll");
+    }
+
+    @Bean
+    public Vertx vertx() {
+        return Vertx.vertx();
     }
 }

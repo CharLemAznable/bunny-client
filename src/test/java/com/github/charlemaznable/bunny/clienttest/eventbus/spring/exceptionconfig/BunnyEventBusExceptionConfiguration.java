@@ -20,13 +20,6 @@ import static org.joor.Reflect.on;
 @BunnyEventBusImport
 public class BunnyEventBusExceptionConfiguration {
 
-    static Vertx vertx;
-
-    @Bean
-    public Vertx vertx() {
-        return vertx;
-    }
-
     @PostConstruct
     public void postConstruct() {
         on(springMinerLoader()).field("minerCache").call("invalidateAll");
@@ -40,6 +33,11 @@ public class BunnyEventBusExceptionConfiguration {
     @PreDestroy
     public void preDestroy() {
         MockDiamondServer.tearDownMockServer();
+    }
+
+    @Bean
+    public Vertx vertx() {
+        return Vertx.vertx();
     }
 }
 

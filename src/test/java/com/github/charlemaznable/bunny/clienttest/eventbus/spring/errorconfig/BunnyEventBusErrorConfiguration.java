@@ -17,22 +17,20 @@ import static org.joor.Reflect.on;
 @BunnyEventBusImport
 public class BunnyEventBusErrorConfiguration {
 
-    static Vertx vertx;
+    @PostConstruct
+    public void postConstruct() {
+        on(springMinerLoader()).field("minerCache").call("invalidateAll");
+        on(springOhLoader()).field("ohCache").call("invalidateAll");
+    }
 
     @Bean
     public Vertx vertx() {
-        return vertx;
+        return Vertx.vertx();
     }
 
     @Bean
     public BunnyClientConfig bunnyClientConfig() {
         return new BunnyClientErrorConfig();
-    }
-
-    @PostConstruct
-    public void postConstruct() {
-        on(springMinerLoader()).field("minerCache").call("invalidateAll");
-        on(springOhLoader()).field("ohCache").call("invalidateAll");
     }
 }
 
