@@ -3,7 +3,7 @@ package com.github.charlemaznable.bunny.clienttest.eventbus.spring.errorconfig;
 import com.github.charlemaznable.bunny.client.config.BunnyClientConfig;
 import com.github.charlemaznable.bunny.client.spring.BunnyEventBusImport;
 import com.github.charlemaznable.bunny.clienttest.mock.BunnyClientErrorConfig;
-import io.vertx.core.Vertx;
+import com.github.charlemaznable.core.vertx.spring.SpringVertxImport;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -14,6 +14,7 @@ import static com.github.charlemaznable.core.net.ohclient.OhFactory.springOhLoad
 import static org.joor.Reflect.on;
 
 @Configuration
+@SpringVertxImport
 @BunnyEventBusImport
 public class BunnyEventBusErrorConfiguration {
 
@@ -21,11 +22,6 @@ public class BunnyEventBusErrorConfiguration {
     public void postConstruct() {
         on(springMinerLoader()).field("minerCache").call("invalidateAll");
         on(springOhLoader()).field("ohCache").call("invalidateAll");
-    }
-
-    @Bean
-    public Vertx vertx() {
-        return Vertx.vertx();
     }
 
     @Bean

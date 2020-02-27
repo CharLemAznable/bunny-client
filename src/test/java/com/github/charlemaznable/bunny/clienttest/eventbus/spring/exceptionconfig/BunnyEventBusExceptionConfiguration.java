@@ -3,9 +3,8 @@ package com.github.charlemaznable.bunny.clienttest.eventbus.spring.exceptionconf
 import com.github.charlemaznable.bunny.client.spring.BunnyEventBusImport;
 import com.github.charlemaznable.bunny.clienttest.mock.BunnyClientExceptionConfig;
 import com.github.charlemaznable.core.miner.MinerScan;
-import io.vertx.core.Vertx;
+import com.github.charlemaznable.core.vertx.spring.SpringVertxImport;
 import org.n3r.diamond.client.impl.MockDiamondServer;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import javax.annotation.PostConstruct;
@@ -17,6 +16,7 @@ import static org.joor.Reflect.on;
 
 @Configuration
 @MinerScan(basePackageClasses = BunnyClientExceptionConfig.class)
+@SpringVertxImport
 @BunnyEventBusImport
 public class BunnyEventBusExceptionConfiguration {
 
@@ -33,11 +33,6 @@ public class BunnyEventBusExceptionConfiguration {
     @PreDestroy
     public void preDestroy() {
         MockDiamondServer.tearDownMockServer();
-    }
-
-    @Bean
-    public Vertx vertx() {
-        return Vertx.vertx();
     }
 }
 

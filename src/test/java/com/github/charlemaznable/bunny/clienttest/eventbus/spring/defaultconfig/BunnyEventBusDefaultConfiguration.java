@@ -1,8 +1,7 @@
 package com.github.charlemaznable.bunny.clienttest.eventbus.spring.defaultconfig;
 
 import com.github.charlemaznable.bunny.client.spring.BunnyEventBusImport;
-import io.vertx.core.Vertx;
-import org.springframework.context.annotation.Bean;
+import com.github.charlemaznable.core.vertx.spring.SpringVertxImport;
 import org.springframework.context.annotation.Configuration;
 
 import javax.annotation.PostConstruct;
@@ -12,6 +11,7 @@ import static com.github.charlemaznable.core.net.ohclient.OhFactory.springOhLoad
 import static org.joor.Reflect.on;
 
 @Configuration
+@SpringVertxImport
 @BunnyEventBusImport
 public class BunnyEventBusDefaultConfiguration {
 
@@ -19,10 +19,5 @@ public class BunnyEventBusDefaultConfiguration {
     public void postConstruct() {
         on(springMinerLoader()).field("minerCache").call("invalidateAll");
         on(springOhLoader()).field("ohCache").call("invalidateAll");
-    }
-
-    @Bean
-    public Vertx vertx() {
-        return Vertx.vertx();
     }
 }
