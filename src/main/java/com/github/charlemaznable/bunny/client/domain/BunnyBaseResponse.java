@@ -25,4 +25,8 @@ public abstract class BunnyBaseResponse implements CncResponse {
      * 响应描述
      */
     private String respDesc;
+
+    public boolean isSuccess() {
+        return RESP_CODE_OK.equals(respCode);
+    }
 }

@@ -32,6 +32,7 @@ import static com.github.charlemaznable.core.codec.Json.unJson;
 import static com.github.charlemaznable.core.lang.Listt.newArrayList;
 import static com.github.charlemaznable.core.lang.Mapp.of;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class MockEventBusConsumer {
@@ -116,6 +117,7 @@ public class MockEventBusConsumer {
                     bunnyEventBus.calculate(calculateRequest, async -> test.verify(() -> {
                         val calculateResponse = async.result();
                         assertEquals(calculateRequest.getChargingType(), calculateResponse.getChargingType());
+                        assertTrue(calculateResponse.isSuccess());
                         assertEquals(RESP_CODE_OK, calculateResponse.getRespCode());
                         assertEquals(RESP_DESC_SUCCESS, calculateResponse.getRespDesc());
                         assertEquals("calcResult", calculateResponse.getCalcResult());
@@ -130,6 +132,7 @@ public class MockEventBusConsumer {
                     bunnyEventBus.charge(chargeRequest, async -> test.verify(() -> {
                         val chargeResponse = async.result();
                         assertEquals(chargeRequest.getChargingType(), chargeResponse.getChargingType());
+                        assertTrue(chargeResponse.isSuccess());
                         assertEquals(RESP_CODE_OK, chargeResponse.getRespCode());
                         assertEquals(RESP_DESC_SUCCESS, chargeResponse.getRespDesc());
                         assertEquals(BALANCE, chargeResponse.getBalance());
@@ -143,6 +146,8 @@ public class MockEventBusConsumer {
                     advanceRequest.setChargingParameters(of("key2", "value2"));
                     bunnyEventBus.paymentAdvance(advanceRequest, async -> test.verify(() -> {
                         val advanceResponse = async.result();
+                        assertEquals(advanceRequest.getChargingType(), advanceResponse.getChargingType());
+                        assertTrue(advanceResponse.isSuccess());
                         assertEquals(RESP_CODE_OK, advanceResponse.getRespCode());
                         assertEquals(RESP_DESC_SUCCESS, advanceResponse.getRespDesc());
                         assertEquals(PAYMENT_ID, advanceResponse.getPaymentId());
@@ -159,6 +164,7 @@ public class MockEventBusConsumer {
                     bunnyEventBus.paymentCommit(commitRequest, async -> test.verify(() -> {
                         val commitResponse = async.result();
                         assertEquals(commitRequest.getChargingType(), commitResponse.getChargingType());
+                        assertTrue(commitResponse.isSuccess());
                         assertEquals(RESP_CODE_OK, commitResponse.getRespCode());
                         assertEquals(RESP_DESC_SUCCESS, commitResponse.getRespDesc());
                         assertEquals("commitValue", commitResponse.getCommitValue());
@@ -174,6 +180,7 @@ public class MockEventBusConsumer {
                     bunnyEventBus.paymentRollback(rollbackRequest, async -> test.verify(() -> {
                         val rollbackResponse = async.result();
                         assertEquals(rollbackRequest.getChargingType(), rollbackResponse.getChargingType());
+                        assertTrue(rollbackResponse.isSuccess());
                         assertEquals(RESP_CODE_OK, rollbackResponse.getRespCode());
                         assertEquals(RESP_DESC_SUCCESS, rollbackResponse.getRespDesc());
                         assertEquals("rollbackValue", rollbackResponse.getRollbackValue());
@@ -200,9 +207,10 @@ public class MockEventBusConsumer {
                     calculateRequest.setChargingType("error");
                     calculateRequest.setChargingParameters(new HashMap<>());
                     bunnyEventBus.calculate(calculateRequest, async -> test.verify(() -> {
-                        val advanceResponse = async.result();
-                        assertEquals("ERROR", advanceResponse.getRespCode());
-                        assertEquals("FAILURE", advanceResponse.getRespDesc());
+                        val calculateResponse = async.result();
+                        assertFalse(calculateResponse.isSuccess());
+                        assertEquals("ERROR", calculateResponse.getRespCode());
+                        assertEquals("FAILURE", calculateResponse.getRespDesc());
                         f.complete();
                     }));
                 })

@@ -13,6 +13,7 @@ import com.github.charlemaznable.bunny.client.domain.PaymentRollbackResponse;
 import com.github.charlemaznable.bunny.client.ohclient.BunnyOhClient;
 import com.github.charlemaznable.bunny.client.ohclient.BunnyOhClientException;
 import com.github.charlemaznable.core.codec.NonsenseSignature;
+import com.github.charlemaznable.core.net.common.StatusError;
 import lombok.SneakyThrows;
 import lombok.val;
 import okhttp3.mockwebserver.Dispatcher;
@@ -30,6 +31,7 @@ import static com.github.charlemaznable.core.codec.Json.spec;
 import static com.github.charlemaznable.core.codec.Json.unJson;
 import static com.github.charlemaznable.core.lang.Mapp.of;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class MockOhClientServer {
@@ -128,6 +130,7 @@ public class MockOhClientServer {
             calculateRequest.setChargingParameters(of("key1", "value1"));
             val calculateResponse = bunnyOhClient.calculate(calculateRequest);
             assertEquals(calculateRequest.getChargingType(), calculateResponse.getChargingType());
+            assertTrue(calculateResponse.isSuccess());
             assertEquals(RESP_CODE_OK, calculateResponse.getRespCode());
             assertEquals(RESP_DESC_SUCCESS, calculateResponse.getRespDesc());
             assertEquals("calcResult", calculateResponse.getCalcResult());
@@ -138,6 +141,7 @@ public class MockOhClientServer {
             chargeRequest.setChargeValue("chargeValue");
             val chargeResponse = bunnyOhClient.charge(chargeRequest);
             assertEquals(chargeRequest.getChargingType(), chargeResponse.getChargingType());
+            assertTrue(chargeResponse.isSuccess());
             assertEquals(RESP_CODE_OK, chargeResponse.getRespCode());
             assertEquals(RESP_DESC_SUCCESS, chargeResponse.getRespDesc());
             assertEquals(BALANCE, chargeResponse.getBalance());
@@ -148,6 +152,7 @@ public class MockOhClientServer {
             advanceRequest.setChargingParameters(of("key2", "value2"));
             val advanceResponse = bunnyOhClient.paymentAdvance(advanceRequest);
             assertEquals(advanceRequest.getChargingType(), advanceResponse.getChargingType());
+            assertTrue(advanceResponse.isSuccess());
             assertEquals(RESP_CODE_OK, advanceResponse.getRespCode());
             assertEquals(RESP_DESC_SUCCESS, advanceResponse.getRespDesc());
             assertEquals(PAYMENT_ID, advanceResponse.getPaymentId());
@@ -160,6 +165,7 @@ public class MockOhClientServer {
             commitRequest.setPaymentId(PAYMENT_ID);
             val commitResponse = bunnyOhClient.paymentCommit(commitRequest);
             assertEquals(commitRequest.getChargingType(), commitResponse.getChargingType());
+            assertTrue(commitResponse.isSuccess());
             assertEquals(RESP_CODE_OK, commitResponse.getRespCode());
             assertEquals(RESP_DESC_SUCCESS, commitResponse.getRespDesc());
             assertEquals("commitValue", commitResponse.getCommitValue());
@@ -171,6 +177,7 @@ public class MockOhClientServer {
             rollbackRequest.setPaymentId(PAYMENT_ID);
             val rollbackResponse = bunnyOhClient.paymentRollback(rollbackRequest);
             assertEquals(rollbackRequest.getChargingType(), rollbackResponse.getChargingType());
+            assertTrue(rollbackResponse.isSuccess());
             assertEquals(RESP_CODE_OK, rollbackResponse.getRespCode());
             assertEquals(RESP_DESC_SUCCESS, rollbackResponse.getRespDesc());
             assertEquals("rollbackValue", rollbackResponse.getRollbackValue());
@@ -197,6 +204,7 @@ public class MockOhClientServer {
             calculateRequest.setChargingType("calculate");
             calculateRequest.setChargingParameters(new HashMap<>());
             val calculateResponse = bunnyOhClient.calculate(calculateRequest);
+            assertFalse(calculateResponse.isSuccess());
             assertEquals("ERROR", calculateResponse.getRespCode());
             assertEquals("FAILURE", calculateResponse.getRespDesc());
         }
@@ -208,13 +216,19 @@ public class MockOhClientServer {
             mockWebServer.setDispatcher(new Dispatcher() {
                 @Override
                 public MockResponse dispatch(RecordedRequest request) {
-                    val resp = new CalculateResponse();
-                    resp.setChargingType("exception");
-                    resp.setRespCode("OK");
-                    resp.setRespDesc("SUCCESS");
-                    resp.setCalcResult("calcResult");
-                    resp.setCalcResultUnit("calcResultUnit");
-                    return new MockResponse().setBody(json(resp));
+                    if ("/exception/calculate".equals(request.getPath())) {
+                        val resp = new CalculateResponse();
+                        resp.setChargingType("exception");
+                        resp.setRespCode("OK");
+                        resp.setRespDesc("SUCCESS");
+                        resp.setCalcResult("calcResult");
+                        resp.setCalcResultUnit("calcResultUnit");
+                        return new MockResponse().setBody(json(resp));
+                    } else {
+                        return new MockResponse()
+                                .setResponseCode(HttpStatus.NOT_FOUND.value())
+                                .setBody(HttpStatus.NOT_FOUND.getReasonPhrase());
+                    }
                 }
             });
             mockWebServer.start(22116);
@@ -226,6 +240,15 @@ public class MockOhClientServer {
                 bunnyOhClient.calculate(calculateRequest);
             } catch (BunnyOhClientException e) {
                 assertEquals("Response verify failed", e.getMessage());
+            }
+
+            try {
+                val chargeRequest = new ChargeRequest();
+                chargeRequest.setChargeValue("charge");
+                chargeRequest.setChargeValue("chargeValue");
+                bunnyOhClient.charge(chargeRequest);
+            } catch (StatusError e) {
+                assertEquals("Not Found", e.getMessage());
             }
         }
     }
