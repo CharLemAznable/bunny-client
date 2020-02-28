@@ -3,16 +3,6 @@ package com.github.charlemaznable.bunny.client.eventbus;
 import com.github.charlemaznable.bunny.client.config.BunnyClientConfig;
 import com.github.charlemaznable.bunny.client.domain.BunnyBaseRequest;
 import com.github.charlemaznable.bunny.client.domain.BunnyBaseResponse;
-import com.github.charlemaznable.bunny.client.domain.CalculateRequest;
-import com.github.charlemaznable.bunny.client.domain.CalculateResponse;
-import com.github.charlemaznable.bunny.client.domain.ChargeRequest;
-import com.github.charlemaznable.bunny.client.domain.ChargeResponse;
-import com.github.charlemaznable.bunny.client.domain.PaymentAdvanceRequest;
-import com.github.charlemaznable.bunny.client.domain.PaymentAdvanceResponse;
-import com.github.charlemaznable.bunny.client.domain.PaymentCommitRequest;
-import com.github.charlemaznable.bunny.client.domain.PaymentCommitResponse;
-import com.github.charlemaznable.bunny.client.domain.PaymentRollbackRequest;
-import com.github.charlemaznable.bunny.client.domain.PaymentRollbackResponse;
 import com.github.charlemaznable.core.codec.NonsenseSignature;
 import com.google.inject.Inject;
 import io.vertx.core.AsyncResult;
@@ -55,35 +45,10 @@ public final class BunnyEventBus {
                 () -> getMiner(BunnyClientConfig.class));
     }
 
-    public void calculate(CalculateRequest request,
-                          Handler<AsyncResult<CalculateResponse>> handler) {
-        request("/calculate", request, handler);
-    }
-
-    public void charge(ChargeRequest request,
-                       Handler<AsyncResult<ChargeResponse>> handler) {
-        request("/charge", request, handler);
-    }
-
-    public void paymentAdvance(PaymentAdvanceRequest request,
-                               Handler<AsyncResult<PaymentAdvanceResponse>> handler) {
-        request("/payment/advance", request, handler);
-    }
-
-    public void paymentCommit(PaymentCommitRequest request,
-                              Handler<AsyncResult<PaymentCommitResponse>> handler) {
-        request("/payment/commit", request, handler);
-    }
-
-    public void paymentRollback(PaymentRollbackRequest request,
-                                Handler<AsyncResult<PaymentRollbackResponse>> handler) {
-        request("/payment/rollback", request, handler);
-    }
-
-    private <T extends BunnyBaseResponse> void request(String address, BunnyBaseRequest<T> request,
-                                                       Handler<AsyncResult<T>> handler) {
+    public <T extends BunnyBaseResponse> void request
+            (BunnyBaseRequest<T> request, Handler<AsyncResult<T>> handler) {
         val requestMap = nonsenseSignature.sign(request);
-        eventBus.<String>request(bunnyClientConfig.eventBusAddressPrefix() + address,
+        eventBus.<String>request(bunnyClientConfig.eventBusAddressPrefix() + request.getBunnyAddress(),
                 json(requestMap), asyncResult -> {
                     if (asyncResult.failed()) {
                         handler.handle(failedFuture(asyncResult.cause()));

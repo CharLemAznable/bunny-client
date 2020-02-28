@@ -18,6 +18,10 @@ public class PaymentAdvanceRequest extends BunnyBaseRequest<PaymentAdvanceRespon
      */
     private Map<String, String> chargingParameters;
 
+    public PaymentAdvanceRequest() {
+        this.bunnyAddress = BunnyAddress.PAYMENT_ADVANCE;
+    }
+
     @Override
     public Class<PaymentAdvanceResponse> getResponseClass() {
         return PaymentAdvanceResponse.class;

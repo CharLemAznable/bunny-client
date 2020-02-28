@@ -128,7 +128,7 @@ public class MockOhClientServer {
             val calculateRequest = new CalculateRequest();
             calculateRequest.setChargingType("calculate");
             calculateRequest.setChargingParameters(of("key1", "value1"));
-            val calculateResponse = bunnyOhClient.calculate(calculateRequest);
+            val calculateResponse = bunnyOhClient.request(calculateRequest);
             assertEquals(calculateRequest.getChargingType(), calculateResponse.getChargingType());
             assertTrue(calculateResponse.isSuccess());
             assertEquals(RESP_CODE_OK, calculateResponse.getRespCode());
@@ -139,7 +139,7 @@ public class MockOhClientServer {
             val chargeRequest = new ChargeRequest();
             chargeRequest.setChargeValue("charge");
             chargeRequest.setChargeValue("chargeValue");
-            val chargeResponse = bunnyOhClient.charge(chargeRequest);
+            val chargeResponse = bunnyOhClient.request(chargeRequest);
             assertEquals(chargeRequest.getChargingType(), chargeResponse.getChargingType());
             assertTrue(chargeResponse.isSuccess());
             assertEquals(RESP_CODE_OK, chargeResponse.getRespCode());
@@ -150,7 +150,7 @@ public class MockOhClientServer {
             val advanceRequest = new PaymentAdvanceRequest();
             advanceRequest.setChargingType("advance");
             advanceRequest.setChargingParameters(of("key2", "value2"));
-            val advanceResponse = bunnyOhClient.paymentAdvance(advanceRequest);
+            val advanceResponse = bunnyOhClient.request(advanceRequest);
             assertEquals(advanceRequest.getChargingType(), advanceResponse.getChargingType());
             assertTrue(advanceResponse.isSuccess());
             assertEquals(RESP_CODE_OK, advanceResponse.getRespCode());
@@ -163,7 +163,7 @@ public class MockOhClientServer {
             val commitRequest = new PaymentCommitRequest();
             commitRequest.setChargingType("commit");
             commitRequest.setPaymentId(PAYMENT_ID);
-            val commitResponse = bunnyOhClient.paymentCommit(commitRequest);
+            val commitResponse = bunnyOhClient.request(commitRequest);
             assertEquals(commitRequest.getChargingType(), commitResponse.getChargingType());
             assertTrue(commitResponse.isSuccess());
             assertEquals(RESP_CODE_OK, commitResponse.getRespCode());
@@ -175,7 +175,7 @@ public class MockOhClientServer {
             val rollbackRequest = new PaymentRollbackRequest();
             rollbackRequest.setChargingType("rollback");
             rollbackRequest.setPaymentId(PAYMENT_ID);
-            val rollbackResponse = bunnyOhClient.paymentRollback(rollbackRequest);
+            val rollbackResponse = bunnyOhClient.request(rollbackRequest);
             assertEquals(rollbackRequest.getChargingType(), rollbackResponse.getChargingType());
             assertTrue(rollbackResponse.isSuccess());
             assertEquals(RESP_CODE_OK, rollbackResponse.getRespCode());
@@ -203,7 +203,7 @@ public class MockOhClientServer {
             val calculateRequest = new CalculateRequest();
             calculateRequest.setChargingType("calculate");
             calculateRequest.setChargingParameters(new HashMap<>());
-            val calculateResponse = bunnyOhClient.calculate(calculateRequest);
+            val calculateResponse = bunnyOhClient.request(calculateRequest);
             assertFalse(calculateResponse.isSuccess());
             assertEquals("ERROR", calculateResponse.getRespCode());
             assertEquals("FAILURE", calculateResponse.getRespDesc());
@@ -237,7 +237,7 @@ public class MockOhClientServer {
                 val calculateRequest = new CalculateRequest();
                 calculateRequest.setChargingType("calculate");
                 calculateRequest.setChargingParameters(new HashMap<>());
-                bunnyOhClient.calculate(calculateRequest);
+                bunnyOhClient.request(calculateRequest);
             } catch (BunnyOhClientException e) {
                 assertEquals("Response verify failed", e.getMessage());
             }
@@ -246,7 +246,7 @@ public class MockOhClientServer {
                 val chargeRequest = new ChargeRequest();
                 chargeRequest.setChargeValue("charge");
                 chargeRequest.setChargeValue("chargeValue");
-                bunnyOhClient.charge(chargeRequest);
+                bunnyOhClient.request(chargeRequest);
             } catch (StatusError e) {
                 assertEquals("Not Found", e.getMessage());
             }

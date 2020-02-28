@@ -15,6 +15,10 @@ public class PaymentRollbackRequest extends BunnyBaseRequest<PaymentRollbackResp
      */
     private String paymentId;
 
+    public PaymentRollbackRequest() {
+        this.bunnyAddress = BunnyAddress.PAYMENT_ROLLBACK;
+    }
+
     @Override
     public Class<PaymentRollbackResponse> getResponseClass() {
         return PaymentRollbackResponse.class;

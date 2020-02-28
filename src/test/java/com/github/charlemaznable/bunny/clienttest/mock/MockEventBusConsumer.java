@@ -114,7 +114,7 @@ public class MockEventBusConsumer {
                     val calculateRequest = new CalculateRequest();
                     calculateRequest.setChargingType("calculate");
                     calculateRequest.setChargingParameters(of("key1", "value1"));
-                    bunnyEventBus.calculate(calculateRequest, async -> test.verify(() -> {
+                    bunnyEventBus.request(calculateRequest, async -> test.verify(() -> {
                         val calculateResponse = async.result();
                         assertEquals(calculateRequest.getChargingType(), calculateResponse.getChargingType());
                         assertTrue(calculateResponse.isSuccess());
@@ -129,7 +129,7 @@ public class MockEventBusConsumer {
                     val chargeRequest = new ChargeRequest();
                     chargeRequest.setChargeValue("charge");
                     chargeRequest.setChargeValue("chargeValue");
-                    bunnyEventBus.charge(chargeRequest, async -> test.verify(() -> {
+                    bunnyEventBus.request(chargeRequest, async -> test.verify(() -> {
                         val chargeResponse = async.result();
                         assertEquals(chargeRequest.getChargingType(), chargeResponse.getChargingType());
                         assertTrue(chargeResponse.isSuccess());
@@ -144,7 +144,7 @@ public class MockEventBusConsumer {
                     val advanceRequest = new PaymentAdvanceRequest();
                     advanceRequest.setChargingType("advance");
                     advanceRequest.setChargingParameters(of("key2", "value2"));
-                    bunnyEventBus.paymentAdvance(advanceRequest, async -> test.verify(() -> {
+                    bunnyEventBus.request(advanceRequest, async -> test.verify(() -> {
                         val advanceResponse = async.result();
                         assertEquals(advanceRequest.getChargingType(), advanceResponse.getChargingType());
                         assertTrue(advanceResponse.isSuccess());
@@ -161,7 +161,7 @@ public class MockEventBusConsumer {
                     val commitRequest = new PaymentCommitRequest();
                     commitRequest.setChargingType("commit");
                     commitRequest.setPaymentId(PAYMENT_ID);
-                    bunnyEventBus.paymentCommit(commitRequest, async -> test.verify(() -> {
+                    bunnyEventBus.request(commitRequest, async -> test.verify(() -> {
                         val commitResponse = async.result();
                         assertEquals(commitRequest.getChargingType(), commitResponse.getChargingType());
                         assertTrue(commitResponse.isSuccess());
@@ -177,7 +177,7 @@ public class MockEventBusConsumer {
                     val rollbackRequest = new PaymentRollbackRequest();
                     rollbackRequest.setChargingType("rollback");
                     rollbackRequest.setPaymentId(PAYMENT_ID);
-                    bunnyEventBus.paymentRollback(rollbackRequest, async -> test.verify(() -> {
+                    bunnyEventBus.request(rollbackRequest, async -> test.verify(() -> {
                         val rollbackResponse = async.result();
                         assertEquals(rollbackRequest.getChargingType(), rollbackResponse.getChargingType());
                         assertTrue(rollbackResponse.isSuccess());
@@ -206,7 +206,7 @@ public class MockEventBusConsumer {
                     val calculateRequest = new CalculateRequest();
                     calculateRequest.setChargingType("error");
                     calculateRequest.setChargingParameters(new HashMap<>());
-                    bunnyEventBus.calculate(calculateRequest, async -> test.verify(() -> {
+                    bunnyEventBus.request(calculateRequest, async -> test.verify(() -> {
                         val calculateResponse = async.result();
                         assertFalse(calculateResponse.isSuccess());
                         assertEquals("ERROR", calculateResponse.getRespCode());
@@ -234,7 +234,7 @@ public class MockEventBusConsumer {
                     val calculateRequest = new CalculateRequest();
                     calculateRequest.setChargingType("calculate");
                     calculateRequest.setChargingParameters(new HashMap<>());
-                    bunnyEventBus.calculate(calculateRequest, async -> test.verify(() -> {
+                    bunnyEventBus.request(calculateRequest, async -> test.verify(() -> {
                         assertTrue(async.failed());
                         val cause = async.cause();
                         assertTrue(cause instanceof BunnyEventBusException);
@@ -246,7 +246,7 @@ public class MockEventBusConsumer {
                     val chargeRequest = new ChargeRequest();
                     chargeRequest.setChargeValue("charge");
                     chargeRequest.setChargeValue("chargeValue");
-                    bunnyEventBus.charge(chargeRequest, async -> test.verify(() -> {
+                    bunnyEventBus.request(chargeRequest, async -> test.verify(() -> {
                         assertTrue(async.failed());
                         val cause = async.cause();
                         assertTrue(cause instanceof ReplyException);

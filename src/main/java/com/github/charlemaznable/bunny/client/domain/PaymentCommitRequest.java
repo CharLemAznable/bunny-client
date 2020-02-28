@@ -15,6 +15,10 @@ public class PaymentCommitRequest extends BunnyBaseRequest<PaymentCommitResponse
      */
     private String paymentId;
 
+    public PaymentCommitRequest() {
+        this.bunnyAddress = BunnyAddress.PAYMENT_COMMIT;
+    }
+
     @Override
     public Class<PaymentCommitResponse> getResponseClass() {
         return PaymentCommitResponse.class;

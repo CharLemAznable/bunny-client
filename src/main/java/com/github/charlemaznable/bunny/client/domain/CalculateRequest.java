@@ -17,6 +17,10 @@ public class CalculateRequest extends BunnyBaseRequest<CalculateResponse> {
      */
     private Map<String, String> chargingParameters;
 
+    public CalculateRequest() {
+        this.bunnyAddress = BunnyAddress.CALCULATE;
+    }
+
     @Override
     public Class<CalculateResponse> getResponseClass() {
         return CalculateResponse.class;

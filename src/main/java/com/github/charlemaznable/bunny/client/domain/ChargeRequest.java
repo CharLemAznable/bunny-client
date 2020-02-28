@@ -15,6 +15,10 @@ public class ChargeRequest extends BunnyBaseRequest<ChargeResponse> {
      */
     private String chargeValue;
 
+    public ChargeRequest() {
+        this.bunnyAddress = BunnyAddress.CHARGE;
+    }
+
     @Override
     public Class<ChargeResponse> getResponseClass() {
         return ChargeResponse.class;
