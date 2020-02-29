@@ -14,10 +14,6 @@ public abstract class BunnyBaseResponse implements CncResponse {
     public static final String RESP_DESC_SUCCESS = "SUCCESS";
 
     /**
-     * 计费类型, 如: 短信/流量
-     */
-    private String chargingType;
-    /**
      * 响应编码
      */
     private String respCode;
@@ -25,6 +21,10 @@ public abstract class BunnyBaseResponse implements CncResponse {
      * 响应描述
      */
     private String respDesc;
+    /**
+     * 计费类型, 如: 短信/流量
+     */
+    private String chargingType;
 
     public boolean isSuccess() {
         return RESP_CODE_OK.equals(respCode);

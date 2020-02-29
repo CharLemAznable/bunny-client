@@ -4,16 +4,16 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * 计费接口 响应
+ * 余额查询接口 响应
  */
 @Getter
 @Setter
-public class CalculateResponse extends BunnyBaseResponse {
+public class QueryResponse extends BunnyBaseResponse {
 
     /**
-     * 费用计量, 表示需使用服务的计量, 如短信条数/流量数值
+     * 余额计量, 表示当前服务余额的计量, 如短信条数/流量数值
      */
-    private String calculate;
+    private String balance;
     /**
      * 计量单位, 表示服务计量的单位, 如条/兆字节
      */

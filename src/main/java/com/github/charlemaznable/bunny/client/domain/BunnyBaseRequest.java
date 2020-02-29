@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter
-@Setter
 public abstract class BunnyBaseRequest<T extends BunnyBaseResponse> implements CncRequest<T> {
 
     @PathVar("bunny-address")
@@ -14,5 +13,6 @@ public abstract class BunnyBaseRequest<T extends BunnyBaseResponse> implements C
     /**
      * 计费类型, 如: 短信/流量
      */
+    @Setter
     private String chargingType;
 }

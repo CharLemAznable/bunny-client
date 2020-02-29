@@ -10,6 +10,8 @@ import com.github.charlemaznable.bunny.client.domain.PaymentCommitRequest;
 import com.github.charlemaznable.bunny.client.domain.PaymentCommitResponse;
 import com.github.charlemaznable.bunny.client.domain.PaymentRollbackRequest;
 import com.github.charlemaznable.bunny.client.domain.PaymentRollbackResponse;
+import com.github.charlemaznable.bunny.client.domain.QueryRequest;
+import com.github.charlemaznable.bunny.client.domain.QueryResponse;
 import com.github.charlemaznable.bunny.client.ohclient.BunnyOhClient;
 import com.github.charlemaznable.bunny.client.ohclient.BunnyOhClientException;
 import com.github.charlemaznable.core.codec.NonsenseSignature;
@@ -36,9 +38,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class MockOhClientServer {
 
-    private static final String PAYMENT_ID = "paymentId";
-    private static final String BALANCE = "balance";
-    private static final String UNIT = "unit";
+    private static final String CALCULATE_VALUE = "calculate";
+    private static final String CHARGE_VALUE = "charge";
+    private static final String PAYMENT_ID_VALUE = "paymentId";
+    private static final String COMMIT_VALUE = "commit";
+    private static final String ROLLBACK_VALUE = "rollback";
+    private static final String BALANCE_VALUE = "balance";
+    private static final String UNIT_VALUE = "unit";
     private static final NonsenseSignature nonsenseSignature = new NonsenseSignature();
 
     @SneakyThrows
@@ -59,62 +65,66 @@ public class MockOhClientServer {
                             resp1.setChargingType(req1.getChargingType());
                             resp1.setRespCode(RESP_CODE_OK);
                             resp1.setRespDesc(RESP_DESC_SUCCESS);
-                            resp1.setCalcResult("calcResult");
-                            resp1.setCalcResultUnit("calcResultUnit");
+                            resp1.setCalculate(CALCULATE_VALUE);
+                            resp1.setUnit(UNIT_VALUE);
                             return new MockResponse().setBody(json(
                                     nonsenseSignature.sign(resp1)));
 
                         case "/bunny/charge":
                             val req2 = spec(requestMap, ChargeRequest.class);
-                            assertEquals("chargeValue", req2.getChargeValue());
+                            assertEquals(CHARGE_VALUE, req2.getChargeValue());
                             val resp2 = new ChargeResponse();
                             resp2.setChargingType(req2.getChargingType());
                             resp2.setRespCode(RESP_CODE_OK);
                             resp2.setRespDesc(RESP_DESC_SUCCESS);
-                            resp2.setBalance(BALANCE);
-                            resp2.setBalanceUnit("balanceUnit");
                             return new MockResponse().setBody(json(
                                     nonsenseSignature.sign(resp2)));
 
                         case "/bunny/payment/advance":
                             val req3 = spec(requestMap, PaymentAdvanceRequest.class);
-                            assertEquals("value2", req3.getChargingParameters().get("key2"));
+                            assertEquals(CALCULATE_VALUE, req3.getPaymentValue());
                             val resp3 = new PaymentAdvanceResponse();
                             resp3.setChargingType(req3.getChargingType());
                             resp3.setRespCode(RESP_CODE_OK);
                             resp3.setRespDesc(RESP_DESC_SUCCESS);
-                            resp3.setPaymentId(PAYMENT_ID);
-                            resp3.setPaymentValue("paymentValue");
-                            resp3.setBalance(BALANCE);
-                            resp3.setUnit(UNIT);
+                            resp3.setPaymentId(PAYMENT_ID_VALUE);
                             return new MockResponse().setBody(json(
                                     nonsenseSignature.sign(resp3)));
 
                         case "/bunny/payment/commit":
                             val req4 = spec(requestMap, PaymentCommitRequest.class);
-                            assertEquals(PAYMENT_ID, req4.getPaymentId());
+                            assertEquals(PAYMENT_ID_VALUE, req4.getPaymentId());
                             val resp4 = new PaymentCommitResponse();
                             resp4.setChargingType(req4.getChargingType());
                             resp4.setRespCode(RESP_CODE_OK);
                             resp4.setRespDesc(RESP_DESC_SUCCESS);
-                            resp4.setCommitValue("commitValue");
-                            resp4.setBalance(BALANCE);
-                            resp4.setUnit(UNIT);
+                            resp4.setCommit(COMMIT_VALUE);
+                            resp4.setUnit(UNIT_VALUE);
                             return new MockResponse().setBody(json(
                                     nonsenseSignature.sign(resp4)));
 
                         case "/bunny/payment/rollback":
                             val req5 = spec(requestMap, PaymentRollbackRequest.class);
-                            assertEquals(PAYMENT_ID, req5.getPaymentId());
+                            assertEquals(PAYMENT_ID_VALUE, req5.getPaymentId());
                             val resp5 = new PaymentRollbackResponse();
                             resp5.setChargingType(req5.getChargingType());
                             resp5.setRespCode(RESP_CODE_OK);
                             resp5.setRespDesc(RESP_DESC_SUCCESS);
-                            resp5.setRollbackValue("rollbackValue");
-                            resp5.setBalance(BALANCE);
-                            resp5.setUnit(UNIT);
+                            resp5.setRollback(ROLLBACK_VALUE);
+                            resp5.setUnit(UNIT_VALUE);
                             return new MockResponse().setBody(json(
                                     nonsenseSignature.sign(resp5)));
+
+                        case "/bunny/query":
+                            val req6 = spec(requestMap, QueryRequest.class);
+                            val resp6 = new QueryResponse();
+                            resp6.setChargingType(req6.getChargingType());
+                            resp6.setRespCode(RESP_CODE_OK);
+                            resp6.setRespDesc(RESP_DESC_SUCCESS);
+                            resp6.setBalance(BALANCE_VALUE);
+                            resp6.setUnit(UNIT_VALUE);
+                            return new MockResponse().setBody(json(
+                                    nonsenseSignature.sign(resp6)));
 
                         default:
                             return new MockResponse()
@@ -133,56 +143,59 @@ public class MockOhClientServer {
             assertTrue(calculateResponse.isSuccess());
             assertEquals(RESP_CODE_OK, calculateResponse.getRespCode());
             assertEquals(RESP_DESC_SUCCESS, calculateResponse.getRespDesc());
-            assertEquals("calcResult", calculateResponse.getCalcResult());
-            assertEquals("calcResultUnit", calculateResponse.getCalcResultUnit());
+            assertEquals(CALCULATE_VALUE, calculateResponse.getCalculate());
+            assertEquals(UNIT_VALUE, calculateResponse.getUnit());
 
             val chargeRequest = new ChargeRequest();
             chargeRequest.setChargeValue("charge");
-            chargeRequest.setChargeValue("chargeValue");
+            chargeRequest.setChargeValue(CHARGE_VALUE);
             val chargeResponse = bunnyOhClient.request(chargeRequest);
             assertEquals(chargeRequest.getChargingType(), chargeResponse.getChargingType());
             assertTrue(chargeResponse.isSuccess());
             assertEquals(RESP_CODE_OK, chargeResponse.getRespCode());
             assertEquals(RESP_DESC_SUCCESS, chargeResponse.getRespDesc());
-            assertEquals(BALANCE, chargeResponse.getBalance());
-            assertEquals("balanceUnit", chargeResponse.getBalanceUnit());
 
             val advanceRequest = new PaymentAdvanceRequest();
             advanceRequest.setChargingType("advance");
-            advanceRequest.setChargingParameters(of("key2", "value2"));
+            advanceRequest.setPaymentValue(CALCULATE_VALUE);
             val advanceResponse = bunnyOhClient.request(advanceRequest);
             assertEquals(advanceRequest.getChargingType(), advanceResponse.getChargingType());
             assertTrue(advanceResponse.isSuccess());
             assertEquals(RESP_CODE_OK, advanceResponse.getRespCode());
             assertEquals(RESP_DESC_SUCCESS, advanceResponse.getRespDesc());
-            assertEquals(PAYMENT_ID, advanceResponse.getPaymentId());
-            assertEquals("paymentValue", advanceResponse.getPaymentValue());
-            assertEquals(BALANCE, advanceResponse.getBalance());
-            assertEquals(UNIT, advanceResponse.getUnit());
+            assertEquals(PAYMENT_ID_VALUE, advanceResponse.getPaymentId());
 
             val commitRequest = new PaymentCommitRequest();
             commitRequest.setChargingType("commit");
-            commitRequest.setPaymentId(PAYMENT_ID);
+            commitRequest.setPaymentId(PAYMENT_ID_VALUE);
             val commitResponse = bunnyOhClient.request(commitRequest);
             assertEquals(commitRequest.getChargingType(), commitResponse.getChargingType());
             assertTrue(commitResponse.isSuccess());
             assertEquals(RESP_CODE_OK, commitResponse.getRespCode());
             assertEquals(RESP_DESC_SUCCESS, commitResponse.getRespDesc());
-            assertEquals("commitValue", commitResponse.getCommitValue());
-            assertEquals(BALANCE, commitResponse.getBalance());
-            assertEquals(UNIT, commitResponse.getUnit());
+            assertEquals(COMMIT_VALUE, commitResponse.getCommit());
+            assertEquals(UNIT_VALUE, commitResponse.getUnit());
 
             val rollbackRequest = new PaymentRollbackRequest();
             rollbackRequest.setChargingType("rollback");
-            rollbackRequest.setPaymentId(PAYMENT_ID);
+            rollbackRequest.setPaymentId(PAYMENT_ID_VALUE);
             val rollbackResponse = bunnyOhClient.request(rollbackRequest);
             assertEquals(rollbackRequest.getChargingType(), rollbackResponse.getChargingType());
             assertTrue(rollbackResponse.isSuccess());
             assertEquals(RESP_CODE_OK, rollbackResponse.getRespCode());
             assertEquals(RESP_DESC_SUCCESS, rollbackResponse.getRespDesc());
-            assertEquals("rollbackValue", rollbackResponse.getRollbackValue());
-            assertEquals(BALANCE, rollbackResponse.getBalance());
-            assertEquals(UNIT, rollbackResponse.getUnit());
+            assertEquals(ROLLBACK_VALUE, rollbackResponse.getRollback());
+            assertEquals(UNIT_VALUE, rollbackResponse.getUnit());
+
+            val queryRequest = new QueryRequest();
+            queryRequest.setChargingType("query");
+            val queryResponse = bunnyOhClient.request(queryRequest);
+            assertEquals(queryRequest.getChargingType(), queryResponse.getChargingType());
+            assertTrue(queryResponse.isSuccess());
+            assertEquals(RESP_CODE_OK, queryResponse.getRespCode());
+            assertEquals(RESP_DESC_SUCCESS, queryResponse.getRespDesc());
+            assertEquals(BALANCE_VALUE, queryResponse.getBalance());
+            assertEquals(UNIT_VALUE, queryResponse.getUnit());
         }
     }
 
@@ -219,10 +232,10 @@ public class MockOhClientServer {
                     if ("/exception/calculate".equals(request.getPath())) {
                         val resp = new CalculateResponse();
                         resp.setChargingType("exception");
-                        resp.setRespCode("OK");
-                        resp.setRespDesc("SUCCESS");
-                        resp.setCalcResult("calcResult");
-                        resp.setCalcResultUnit("calcResultUnit");
+                        resp.setRespCode(RESP_CODE_OK);
+                        resp.setRespDesc(RESP_DESC_SUCCESS);
+                        resp.setCalculate(CALCULATE_VALUE);
+                        resp.setUnit(UNIT_VALUE);
                         return new MockResponse().setBody(json(resp));
                     } else {
                         return new MockResponse()
@@ -245,7 +258,7 @@ public class MockOhClientServer {
             try {
                 val chargeRequest = new ChargeRequest();
                 chargeRequest.setChargeValue("charge");
-                chargeRequest.setChargeValue("chargeValue");
+                chargeRequest.setChargeValue(CHARGE_VALUE);
                 bunnyOhClient.request(chargeRequest);
             } catch (StatusError e) {
                 assertEquals("Not Found", e.getMessage());
