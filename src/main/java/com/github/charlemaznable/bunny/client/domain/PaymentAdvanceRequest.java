@@ -13,7 +13,7 @@ public class PaymentAdvanceRequest extends BunnyBaseRequest<PaymentAdvanceRespon
     /**
      * 扣费计量, 表示预扣减的服务计量, 如短信条数/流量数值
      */
-    private String paymentValue;
+    private int paymentValue;
 
     public PaymentAdvanceRequest() {
         this.bunnyAddress = BunnyAddress.PAYMENT_ADVANCE;

@@ -13,7 +13,7 @@ public class ChargeRequest extends BunnyBaseRequest<ChargeResponse> {
     /**
      * 充值计量, 表示需充值服务的计量, 如短信条数/流量数值
      */
-    private String chargeValue;
+    private int chargeValue;
 
     public ChargeRequest() {
         this.bunnyAddress = BunnyAddress.CHARGE;

@@ -13,7 +13,7 @@ public class CalculateResponse extends BunnyBaseResponse {
     /**
      * 费用计量, 表示需使用服务的计量, 如短信条数/流量数值
      */
-    private String calculate;
+    private int calculate;
     /**
      * 计量单位, 表示服务计量的单位, 如条/兆字节
      */

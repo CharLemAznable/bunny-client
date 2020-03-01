@@ -38,12 +38,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class MockOhClientServer {
 
-    private static final String CALCULATE_VALUE = "calculate";
-    private static final String CHARGE_VALUE = "charge";
+    private static final int CALCULATE_VALUE = 12;
+    private static final int CHARGE_VALUE = 34;
     private static final String PAYMENT_ID_VALUE = "paymentId";
-    private static final String COMMIT_VALUE = "commit";
-    private static final String ROLLBACK_VALUE = "rollback";
-    private static final String BALANCE_VALUE = "balance";
+    private static final int COMMIT_VALUE = 56;
+    private static final int ROLLBACK_VALUE = 78;
+    private static final int BALANCE_VALUE = 90;
     private static final String UNIT_VALUE = "unit";
     private static final NonsenseSignature nonsenseSignature = new NonsenseSignature();
 
@@ -147,7 +147,7 @@ public class MockOhClientServer {
             assertEquals(UNIT_VALUE, calculateResponse.getUnit());
 
             val chargeRequest = new ChargeRequest();
-            chargeRequest.setChargeValue("charge");
+            chargeRequest.setChargingType("charge");
             chargeRequest.setChargeValue(CHARGE_VALUE);
             val chargeResponse = bunnyOhClient.request(chargeRequest);
             assertEquals(chargeRequest.getChargingType(), chargeResponse.getChargingType());
@@ -214,7 +214,7 @@ public class MockOhClientServer {
             mockWebServer.start(22115);
 
             val calculateRequest = new CalculateRequest();
-            calculateRequest.setChargingType("calculate");
+            calculateRequest.setChargingType("error");
             calculateRequest.setChargingParameters(new HashMap<>());
             val calculateResponse = bunnyOhClient.request(calculateRequest);
             assertFalse(calculateResponse.isSuccess());
@@ -231,7 +231,7 @@ public class MockOhClientServer {
                 public MockResponse dispatch(RecordedRequest request) {
                     if ("/exception/calculate".equals(request.getPath())) {
                         val resp = new CalculateResponse();
-                        resp.setChargingType("exception");
+                        resp.setChargingType("error");
                         resp.setRespCode(RESP_CODE_OK);
                         resp.setRespDesc(RESP_DESC_SUCCESS);
                         resp.setCalculate(CALCULATE_VALUE);
@@ -248,7 +248,7 @@ public class MockOhClientServer {
 
             try {
                 val calculateRequest = new CalculateRequest();
-                calculateRequest.setChargingType("calculate");
+                calculateRequest.setChargingType("error");
                 calculateRequest.setChargingParameters(new HashMap<>());
                 bunnyOhClient.request(calculateRequest);
             } catch (BunnyOhClientException e) {
@@ -257,7 +257,7 @@ public class MockOhClientServer {
 
             try {
                 val chargeRequest = new ChargeRequest();
-                chargeRequest.setChargeValue("charge");
+                chargeRequest.setChargingType("error");
                 chargeRequest.setChargeValue(CHARGE_VALUE);
                 bunnyOhClient.request(chargeRequest);
             } catch (StatusError e) {

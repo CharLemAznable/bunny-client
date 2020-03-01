@@ -39,12 +39,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class MockEventBusConsumer {
 
-    private static final String CALCULATE_VALUE = "calculate";
-    private static final String CHARGE_VALUE = "charge";
+    private static final int CALCULATE_VALUE = 12;
+    private static final int CHARGE_VALUE = 34;
     private static final String PAYMENT_ID_VALUE = "paymentId";
-    private static final String COMMIT_VALUE = "commit";
-    private static final String ROLLBACK_VALUE = "rollback";
-    private static final String BALANCE_VALUE = "balance";
+    private static final int COMMIT_VALUE = 56;
+    private static final int ROLLBACK_VALUE = 78;
+    private static final int BALANCE_VALUE = 90;
     private static final String UNIT_VALUE = "unit";
     private static final NonsenseSignature nonsenseSignature = new NonsenseSignature();
 
@@ -137,7 +137,7 @@ public class MockEventBusConsumer {
                 }),
                 Future.<Void>future(f -> {
                     val chargeRequest = new ChargeRequest();
-                    chargeRequest.setChargeValue("charge");
+                    chargeRequest.setChargingType("charge");
                     chargeRequest.setChargeValue(CHARGE_VALUE);
                     bunnyEventBus.request(chargeRequest, async -> test.verify(() -> {
                         val chargeResponse = async.result();
@@ -249,7 +249,7 @@ public class MockEventBusConsumer {
         CompositeFuture.all(newArrayList(
                 Future.<Void>future(f -> {
                     val calculateRequest = new CalculateRequest();
-                    calculateRequest.setChargingType("calculate");
+                    calculateRequest.setChargingType("error");
                     calculateRequest.setChargingParameters(new HashMap<>());
                     bunnyEventBus.request(calculateRequest, async -> test.verify(() -> {
                         assertTrue(async.failed());
@@ -261,8 +261,8 @@ public class MockEventBusConsumer {
                 }),
                 Future.<Void>future(f -> {
                     val chargeRequest = new ChargeRequest();
-                    chargeRequest.setChargeValue("charge");
-                    chargeRequest.setChargeValue("chargeValue");
+                    chargeRequest.setChargingType("error");
+                    chargeRequest.setChargeValue(CHARGE_VALUE);
                     bunnyEventBus.request(chargeRequest, async -> test.verify(() -> {
                         assertTrue(async.failed());
                         val cause = async.cause();

@@ -13,7 +13,7 @@ public class PaymentCommitResponse extends BunnyBaseResponse {
     /**
      * 扣费计量, 表示确认扣减的服务计量, 如短信条数/流量数值
      */
-    private String commit;
+    private int commit;
     /**
      * 计量单位, 表示服务计量的单位, 如条/兆字节
      */
