@@ -20,7 +20,7 @@ public class ChargeRequest extends BunnyBaseRequest<ChargeResponse> {
     }
 
     @Override
-    public Class<ChargeResponse> getResponseClass() {
+    public Class<ChargeResponse> responseClass() {
         return ChargeResponse.class;
     }
 }

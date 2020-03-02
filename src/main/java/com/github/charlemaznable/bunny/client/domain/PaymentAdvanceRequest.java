@@ -20,7 +20,7 @@ public class PaymentAdvanceRequest extends BunnyBaseRequest<PaymentAdvanceRespon
     }
 
     @Override
-    public Class<PaymentAdvanceResponse> getResponseClass() {
+    public Class<PaymentAdvanceResponse> responseClass() {
         return PaymentAdvanceResponse.class;
     }
 }

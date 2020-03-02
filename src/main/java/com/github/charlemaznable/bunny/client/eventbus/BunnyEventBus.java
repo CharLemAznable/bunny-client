@@ -59,7 +59,7 @@ public final class BunnyEventBus {
                     if (!RESP_CODE_OK.equals(responseMap.get(RESP_CODE_KEY))) {
                         // 失败响应, 不验证签名
                         handler.handle(succeededFuture(
-                                spec(responseMap, request.getResponseClass())));
+                                spec(responseMap, request.responseClass())));
                         return;
                     }
 
@@ -69,7 +69,7 @@ public final class BunnyEventBus {
                         return;
                     }
                     handler.handle(succeededFuture(
-                            spec(responseMap, request.getResponseClass())));
+                            spec(responseMap, request.responseClass())));
                 });
     }
 }

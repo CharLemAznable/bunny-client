@@ -20,7 +20,7 @@ public class PaymentRollbackRequest extends BunnyBaseRequest<PaymentRollbackResp
     }
 
     @Override
-    public Class<PaymentRollbackResponse> getResponseClass() {
+    public Class<PaymentRollbackResponse> responseClass() {
         return PaymentRollbackResponse.class;
     }
 }

@@ -20,7 +20,7 @@ public class PaymentCommitRequest extends BunnyBaseRequest<PaymentCommitResponse
     }
 
     @Override
-    public Class<PaymentCommitResponse> getResponseClass() {
+    public Class<PaymentCommitResponse> responseClass() {
         return PaymentCommitResponse.class;
     }
 }
