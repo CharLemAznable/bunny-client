@@ -3,15 +3,10 @@ package com.github.charlemaznable.bunny.clienttest.mock;
 import com.github.charlemaznable.bunny.client.domain.CalculateRequest;
 import com.github.charlemaznable.bunny.client.domain.CalculateResponse;
 import com.github.charlemaznable.bunny.client.domain.ChargeRequest;
-import com.github.charlemaznable.bunny.client.domain.ChargeResponse;
 import com.github.charlemaznable.bunny.client.domain.PaymentAdvanceRequest;
-import com.github.charlemaznable.bunny.client.domain.PaymentAdvanceResponse;
 import com.github.charlemaznable.bunny.client.domain.PaymentCommitRequest;
-import com.github.charlemaznable.bunny.client.domain.PaymentCommitResponse;
 import com.github.charlemaznable.bunny.client.domain.PaymentRollbackRequest;
-import com.github.charlemaznable.bunny.client.domain.PaymentRollbackResponse;
 import com.github.charlemaznable.bunny.client.domain.QueryRequest;
-import com.github.charlemaznable.bunny.client.domain.QueryResponse;
 import com.github.charlemaznable.bunny.client.eventbus.BunnyEventBus;
 import com.github.charlemaznable.bunny.client.eventbus.BunnyEventBusException;
 import com.github.charlemaznable.core.codec.NonsenseSignature;
@@ -54,10 +49,8 @@ public class MockEventBusConsumer {
             val requestMap = verifyRequestMap(message);
             val req1 = spec(requestMap, CalculateRequest.class);
             assertEquals("value1", req1.getChargingParameters().get("key1"));
-            val resp1 = new CalculateResponse();
-            resp1.setChargingType(req1.getChargingType());
-            resp1.setRespCode(RESP_CODE_OK);
-            resp1.setRespDesc(RESP_DESC_SUCCESS);
+            val resp1 = req1.createResponse();
+            resp1.succeed();
             resp1.setCalculate(CALCULATE_VALUE);
             resp1.setUnit(UNIT_VALUE);
             message.reply(json(nonsenseSignature.sign(resp1)));
@@ -66,20 +59,16 @@ public class MockEventBusConsumer {
             val requestMap = verifyRequestMap(message);
             val req2 = spec(requestMap, ChargeRequest.class);
             assertEquals(CHARGE_VALUE, req2.getChargeValue());
-            val resp2 = new ChargeResponse();
-            resp2.setChargingType(req2.getChargingType());
-            resp2.setRespCode(RESP_CODE_OK);
-            resp2.setRespDesc(RESP_DESC_SUCCESS);
+            val resp2 = req2.createResponse();
+            resp2.succeed();
             message.reply(json(nonsenseSignature.sign(resp2)));
         });
         eventBus.<String>consumer("/bunny/payment/advance", message -> {
             val requestMap = verifyRequestMap(message);
             val req3 = spec(requestMap, PaymentAdvanceRequest.class);
             assertEquals(CALCULATE_VALUE, req3.getPaymentValue());
-            val resp3 = new PaymentAdvanceResponse();
-            resp3.setChargingType(req3.getChargingType());
-            resp3.setRespCode(RESP_CODE_OK);
-            resp3.setRespDesc(RESP_DESC_SUCCESS);
+            val resp3 = req3.createResponse();
+            resp3.succeed();
             resp3.setPaymentId(PAYMENT_ID_VALUE);
             message.reply(json(nonsenseSignature.sign(resp3)));
         });
@@ -87,10 +76,8 @@ public class MockEventBusConsumer {
             val requestMap = verifyRequestMap(message);
             val req4 = spec(requestMap, PaymentCommitRequest.class);
             assertEquals(PAYMENT_ID_VALUE, req4.getPaymentId());
-            val resp4 = new PaymentCommitResponse();
-            resp4.setChargingType(req4.getChargingType());
-            resp4.setRespCode(RESP_CODE_OK);
-            resp4.setRespDesc(RESP_DESC_SUCCESS);
+            val resp4 = req4.createResponse();
+            resp4.succeed();
             resp4.setCommit(COMMIT_VALUE);
             resp4.setUnit(UNIT_VALUE);
             message.reply(json(nonsenseSignature.sign(resp4)));
@@ -99,10 +86,8 @@ public class MockEventBusConsumer {
             val requestMap = verifyRequestMap(message);
             val req5 = spec(requestMap, PaymentRollbackRequest.class);
             assertEquals(PAYMENT_ID_VALUE, req5.getPaymentId());
-            val resp5 = new PaymentRollbackResponse();
-            resp5.setChargingType(req5.getChargingType());
-            resp5.setRespCode(RESP_CODE_OK);
-            resp5.setRespDesc(RESP_DESC_SUCCESS);
+            val resp5 = req5.createResponse();
+            resp5.succeed();
             resp5.setRollback(ROLLBACK_VALUE);
             resp5.setUnit(UNIT_VALUE);
             message.reply(json(nonsenseSignature.sign(resp5)));
@@ -110,10 +95,8 @@ public class MockEventBusConsumer {
         eventBus.<String>consumer("/bunny/query", message -> {
             val requestMap = verifyRequestMap(message);
             val req6 = spec(requestMap, QueryRequest.class);
-            val resp6 = new QueryResponse();
-            resp6.setChargingType(req6.getChargingType());
-            resp6.setRespCode(RESP_CODE_OK);
-            resp6.setRespDesc(RESP_DESC_SUCCESS);
+            val resp6 = req6.createResponse();
+            resp6.succeed();
             resp6.setBalance(BALANCE_VALUE);
             resp6.setUnit(UNIT_VALUE);
             message.reply(json(nonsenseSignature.sign(resp6)));
@@ -213,8 +196,7 @@ public class MockEventBusConsumer {
         val eventBus = vertx.eventBus();
         eventBus.<String>consumer("/error/calculate", message -> {
             val resp = new CalculateResponse();
-            resp.setRespCode("ERROR");
-            resp.setRespDesc("FAILURE");
+            resp.failed("ERROR", "FAILURE");
             message.reply(json(resp));
         });
 
@@ -239,8 +221,7 @@ public class MockEventBusConsumer {
         eventBus.<String>consumer("/exception/calculate", message -> {
             val resp = new CalculateResponse();
             resp.setChargingType("error");
-            resp.setRespCode(RESP_CODE_OK);
-            resp.setRespDesc(RESP_DESC_SUCCESS);
+            resp.succeed();
             resp.setCalculate(CALCULATE_VALUE);
             resp.setUnit(UNIT_VALUE);
             message.reply(json(resp));

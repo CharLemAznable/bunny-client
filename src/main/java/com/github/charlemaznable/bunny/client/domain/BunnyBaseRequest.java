@@ -9,6 +9,7 @@ import lombok.Setter;
 import java.util.Map;
 
 import static com.github.charlemaznable.core.lang.Mapp.newHashMap;
+import static org.joor.Reflect.onClass;
 
 @Getter
 public abstract class BunnyBaseRequest<T extends BunnyBaseResponse> implements CncRequest<T> {
@@ -25,4 +26,10 @@ public abstract class BunnyBaseRequest<T extends BunnyBaseResponse> implements C
      * 可选扩展参数
      */
     private Map<String, String> extend = newHashMap();
+
+    public T createResponse() {
+        T response = onClass(responseClass()).create().get();
+        response.setChargingType(this.chargingType);
+        return response;
+    }
 }

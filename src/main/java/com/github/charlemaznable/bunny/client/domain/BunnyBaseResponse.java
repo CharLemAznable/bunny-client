@@ -29,4 +29,14 @@ public abstract class BunnyBaseResponse implements CncResponse {
     public boolean isSuccess() {
         return RESP_CODE_OK.equals(respCode);
     }
+
+    public void succeed() {
+        this.setRespCode(RESP_CODE_OK);
+        this.setRespDesc(RESP_DESC_SUCCESS);
+    }
+
+    public void failed(String respCode, String respDesc) {
+        this.setRespCode(respCode);
+        this.setRespDesc(respDesc);
+    }
 }
