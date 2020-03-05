@@ -3,10 +3,9 @@ package com.github.charlemaznable.bunny.clienttest.mock;
 import com.github.charlemaznable.bunny.client.domain.CalculateRequest;
 import com.github.charlemaznable.bunny.client.domain.CalculateResponse;
 import com.github.charlemaznable.bunny.client.domain.ChargeRequest;
-import com.github.charlemaznable.bunny.client.domain.PaymentAdvanceRequest;
-import com.github.charlemaznable.bunny.client.domain.PaymentCommitRequest;
-import com.github.charlemaznable.bunny.client.domain.PaymentRollbackRequest;
 import com.github.charlemaznable.bunny.client.domain.QueryRequest;
+import com.github.charlemaznable.bunny.client.domain.ServeCallbackRequest;
+import com.github.charlemaznable.bunny.client.domain.ServeRequest;
 import com.github.charlemaznable.bunny.client.eventbus.BunnyEventBus;
 import com.github.charlemaznable.bunny.client.eventbus.BunnyEventBusException;
 import com.github.charlemaznable.core.codec.NonsenseSignature;
@@ -30,6 +29,7 @@ import static com.github.charlemaznable.core.lang.Listt.newArrayList;
 import static com.github.charlemaznable.core.lang.Mapp.of;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class MockEventBusConsumer {
@@ -47,59 +47,49 @@ public class MockEventBusConsumer {
         val eventBus = vertx.eventBus();
         eventBus.<String>consumer("/bunny/calculate", message -> {
             val requestMap = verifyRequestMap(message);
-            val req1 = spec(requestMap, CalculateRequest.class);
-            assertEquals("value1", req1.getChargingParameters().get("key1"));
-            val resp1 = req1.createResponse();
-            resp1.succeed();
-            resp1.setCalculate(CALCULATE_VALUE);
-            resp1.setUnit(UNIT_VALUE);
-            message.reply(json(nonsenseSignature.sign(resp1)));
+            val calculateRequest = spec(requestMap, CalculateRequest.class);
+            assertEquals("value1", calculateRequest.getChargingParameters().get("key1"));
+            val calculateResponse = calculateRequest.createResponse();
+            calculateResponse.succeed();
+            calculateResponse.setCalculate(CALCULATE_VALUE);
+            calculateResponse.setUnit(UNIT_VALUE);
+            message.reply(json(nonsenseSignature.sign(calculateResponse)));
         });
         eventBus.<String>consumer("/bunny/charge", message -> {
             val requestMap = verifyRequestMap(message);
-            val req2 = spec(requestMap, ChargeRequest.class);
-            assertEquals(CHARGE_VALUE, req2.getChargeValue());
-            val resp2 = req2.createResponse();
-            resp2.succeed();
-            message.reply(json(nonsenseSignature.sign(resp2)));
-        });
-        eventBus.<String>consumer("/bunny/payment/advance", message -> {
-            val requestMap = verifyRequestMap(message);
-            val req3 = spec(requestMap, PaymentAdvanceRequest.class);
-            assertEquals(CALCULATE_VALUE, req3.getPaymentValue());
-            val resp3 = req3.createResponse();
-            resp3.succeed();
-            resp3.setPaymentId(PAYMENT_ID_VALUE);
-            message.reply(json(nonsenseSignature.sign(resp3)));
-        });
-        eventBus.<String>consumer("/bunny/payment/commit", message -> {
-            val requestMap = verifyRequestMap(message);
-            val req4 = spec(requestMap, PaymentCommitRequest.class);
-            assertEquals(PAYMENT_ID_VALUE, req4.getPaymentId());
-            val resp4 = req4.createResponse();
-            resp4.succeed();
-            resp4.setCommit(COMMIT_VALUE);
-            resp4.setUnit(UNIT_VALUE);
-            message.reply(json(nonsenseSignature.sign(resp4)));
-        });
-        eventBus.<String>consumer("/bunny/payment/rollback", message -> {
-            val requestMap = verifyRequestMap(message);
-            val req5 = spec(requestMap, PaymentRollbackRequest.class);
-            assertEquals(PAYMENT_ID_VALUE, req5.getPaymentId());
-            val resp5 = req5.createResponse();
-            resp5.succeed();
-            resp5.setRollback(ROLLBACK_VALUE);
-            resp5.setUnit(UNIT_VALUE);
-            message.reply(json(nonsenseSignature.sign(resp5)));
+            val chargeRequest = spec(requestMap, ChargeRequest.class);
+            assertEquals(CHARGE_VALUE, chargeRequest.getChargeValue());
+            val chargeResponse = chargeRequest.createResponse();
+            chargeResponse.succeed();
+            message.reply(json(nonsenseSignature.sign(chargeResponse)));
         });
         eventBus.<String>consumer("/bunny/query", message -> {
             val requestMap = verifyRequestMap(message);
-            val req6 = spec(requestMap, QueryRequest.class);
-            val resp6 = req6.createResponse();
-            resp6.succeed();
-            resp6.setBalance(BALANCE_VALUE);
-            resp6.setUnit(UNIT_VALUE);
-            message.reply(json(nonsenseSignature.sign(resp6)));
+            val queryRequest = spec(requestMap, QueryRequest.class);
+            val queryResponse = queryRequest.createResponse();
+            queryResponse.succeed();
+            queryResponse.setBalance(BALANCE_VALUE);
+            queryResponse.setUnit(UNIT_VALUE);
+            message.reply(json(nonsenseSignature.sign(queryResponse)));
+        });
+        eventBus.<String>consumer("/bunny/serve", message -> {
+            val requestMap = verifyRequestMap(message);
+            val serveRequest = spec(requestMap, ServeRequest.class);
+            assertNull(serveRequest.getPaymentValue());
+            assertNull(serveRequest.getChargingParameters());
+            val serveResponse = serveRequest.createResponse();
+            serveResponse.succeed();
+            serveResponse.setServeType(serveRequest.getServeType());
+            serveResponse.setInternalResponse(serveRequest.getInternalRequest());
+            message.reply(json(nonsenseSignature.sign(serveResponse)));
+        });
+        eventBus.<String>consumer("/bunny/serve-callback", message -> {
+            val requestMap = verifyRequestMap(message);
+            val serveCallbackRequest = spec(requestMap, ServeCallbackRequest.class);
+            val serveCallbackResponse = serveCallbackRequest.createResponse();
+            serveCallbackResponse.succeed();
+            serveCallbackResponse.setServeType(serveCallbackRequest.getServeType());
+            message.reply(json(nonsenseSignature.sign(serveCallbackResponse)));
         });
 
         CompositeFuture.all(newArrayList(
@@ -132,50 +122,6 @@ public class MockEventBusConsumer {
                     }));
                 }),
                 Future.<Void>future(f -> {
-                    val advanceRequest = new PaymentAdvanceRequest();
-                    advanceRequest.setChargingType("advance");
-                    advanceRequest.setPaymentValue(CALCULATE_VALUE);
-                    bunnyEventBus.request(advanceRequest, async -> test.verify(() -> {
-                        val advanceResponse = async.result();
-                        assertEquals(advanceRequest.getChargingType(), advanceResponse.getChargingType());
-                        assertTrue(advanceResponse.isSuccess());
-                        assertEquals(RESP_CODE_OK, advanceResponse.getRespCode());
-                        assertEquals(RESP_DESC_SUCCESS, advanceResponse.getRespDesc());
-                        assertEquals(PAYMENT_ID_VALUE, advanceResponse.getPaymentId());
-                        f.complete();
-                    }));
-                }),
-                Future.<Void>future(f -> {
-                    val commitRequest = new PaymentCommitRequest();
-                    commitRequest.setChargingType("commit");
-                    commitRequest.setPaymentId(PAYMENT_ID_VALUE);
-                    bunnyEventBus.request(commitRequest, async -> test.verify(() -> {
-                        val commitResponse = async.result();
-                        assertEquals(commitRequest.getChargingType(), commitResponse.getChargingType());
-                        assertTrue(commitResponse.isSuccess());
-                        assertEquals(RESP_CODE_OK, commitResponse.getRespCode());
-                        assertEquals(RESP_DESC_SUCCESS, commitResponse.getRespDesc());
-                        assertEquals(COMMIT_VALUE, commitResponse.getCommit());
-                        assertEquals(UNIT_VALUE, commitResponse.getUnit());
-                        f.complete();
-                    }));
-                }),
-                Future.<Void>future(f -> {
-                    val rollbackRequest = new PaymentRollbackRequest();
-                    rollbackRequest.setChargingType("rollback");
-                    rollbackRequest.setPaymentId(PAYMENT_ID_VALUE);
-                    bunnyEventBus.request(rollbackRequest, async -> test.verify(() -> {
-                        val rollbackResponse = async.result();
-                        assertEquals(rollbackRequest.getChargingType(), rollbackResponse.getChargingType());
-                        assertTrue(rollbackResponse.isSuccess());
-                        assertEquals(RESP_CODE_OK, rollbackResponse.getRespCode());
-                        assertEquals(RESP_DESC_SUCCESS, rollbackResponse.getRespDesc());
-                        assertEquals(ROLLBACK_VALUE, rollbackResponse.getRollback());
-                        assertEquals(UNIT_VALUE, rollbackResponse.getUnit());
-                        f.complete();
-                    }));
-                }),
-                Future.<Void>future(f -> {
                     val queryRequest = new QueryRequest();
                     queryRequest.setChargingType("query");
                     bunnyEventBus.request(queryRequest, async -> test.verify(() -> {
@@ -186,6 +132,37 @@ public class MockEventBusConsumer {
                         assertEquals(RESP_DESC_SUCCESS, queryResponse.getRespDesc());
                         assertEquals(BALANCE_VALUE, queryResponse.getBalance());
                         assertEquals(UNIT_VALUE, queryResponse.getUnit());
+                        f.complete();
+                    }));
+                }),
+                Future.<Void>future(f -> {
+                    val serveRequest = new ServeRequest();
+                    serveRequest.setChargingType("serve");
+                    serveRequest.setServeType("proxy");
+                    serveRequest.setInternalRequest(of("key2", "value2"));
+                    bunnyEventBus.request(serveRequest, async -> test.verify(() -> {
+                        val serveResponse = async.result();
+                        assertEquals(serveRequest.getChargingType(), serveResponse.getChargingType());
+                        assertTrue(serveResponse.isSuccess());
+                        assertEquals(RESP_CODE_OK, serveResponse.getRespCode());
+                        assertEquals(RESP_DESC_SUCCESS, serveResponse.getRespDesc());
+                        assertEquals("proxy", serveResponse.getServeType());
+                        assertEquals("value2", serveResponse.getInternalResponse().get("key2"));
+                        f.complete();
+                    }));
+                }),
+                Future.<Void>future(f -> {
+                    val serveCallbackRequest = new ServeCallbackRequest();
+                    serveCallbackRequest.setChargingType("serve");
+                    serveCallbackRequest.setServeType("proxy");
+                    serveCallbackRequest.setInternalRequest(of("key3", "value3"));
+                    bunnyEventBus.request(serveCallbackRequest, async -> test.verify(() -> {
+                        val serveCallbackResponse = async.result();
+                        assertEquals(serveCallbackRequest.getChargingType(), serveCallbackResponse.getChargingType());
+                        assertTrue(serveCallbackResponse.isSuccess());
+                        assertEquals(RESP_CODE_OK, serveCallbackResponse.getRespCode());
+                        assertEquals(RESP_DESC_SUCCESS, serveCallbackResponse.getRespDesc());
+                        assertEquals("proxy", serveCallbackResponse.getServeType());
                         f.complete();
                     }));
                 })
