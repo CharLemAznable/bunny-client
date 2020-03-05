@@ -21,7 +21,7 @@ public class ServeResponse extends BunnyBaseResponse {
      */
     private Map<String, Object> internalResponse;
     /**
-     * 服务调用异常信息
+     * 非期望的内部异常信息
      */
-    private String internalFailure;
+    private String unexpectedFailure;
 }

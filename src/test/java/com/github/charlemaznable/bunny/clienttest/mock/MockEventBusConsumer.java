@@ -44,7 +44,7 @@ public class MockEventBusConsumer {
     private static final String INTERNAL_KEY = "key";
     private static final String INTERNAL_VALUE = "value";
     private static final String CALLBACK_URL = "callback-url";
-    private static final String INTERNAL_FAILURE = "internal-failure";
+    private static final String UNEXPECTED_FAILURE = "unexpected-failure";
     private static final String SEQ_ID = "seq-id";
     private static final NonsenseSignature nonsenseSignature = new NonsenseSignature();
 
@@ -87,7 +87,7 @@ public class MockEventBusConsumer {
             val serveResponse = serveRequest.createResponse();
             serveResponse.succeed();
             serveResponse.setInternalResponse(serveRequest.getInternalRequest());
-            serveResponse.setInternalFailure(INTERNAL_FAILURE);
+            serveResponse.setUnexpectedFailure(UNEXPECTED_FAILURE);
             message.reply(json(nonsenseSignature.sign(serveResponse)));
         });
         eventBus.<String>consumer("/bunny/serve-callback", message -> {
@@ -97,6 +97,7 @@ public class MockEventBusConsumer {
             assertEquals(SEQ_ID, serveCallbackRequest.getSeqId());
             val serveCallbackResponse = serveCallbackRequest.createResponse();
             serveCallbackResponse.succeed();
+            serveCallbackResponse.setUnexpectedFailure(UNEXPECTED_FAILURE);
             message.reply(json(nonsenseSignature.sign(serveCallbackResponse)));
         });
 
@@ -159,7 +160,7 @@ public class MockEventBusConsumer {
                         assertEquals(RESP_DESC_SUCCESS, serveResponse.getRespDesc());
                         assertEquals(SERVE_TYPE, serveResponse.getServeType());
                         assertEquals(INTERNAL_VALUE, serveResponse.getInternalResponse().get(INTERNAL_KEY));
-                        assertEquals(INTERNAL_FAILURE, serveResponse.getInternalFailure());
+                        assertEquals(UNEXPECTED_FAILURE, serveResponse.getUnexpectedFailure());
                         f.complete();
                     }));
                 }),
@@ -176,6 +177,7 @@ public class MockEventBusConsumer {
                         assertEquals(RESP_CODE_OK, serveCallbackResponse.getRespCode());
                         assertEquals(RESP_DESC_SUCCESS, serveCallbackResponse.getRespDesc());
                         assertEquals(SERVE_TYPE, serveCallbackResponse.getServeType());
+                        assertEquals(UNEXPECTED_FAILURE, serveCallbackResponse.getUnexpectedFailure());
                         f.complete();
                     }));
                 })
