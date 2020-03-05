@@ -30,9 +30,20 @@ public abstract class BunnyBaseResponse implements CncResponse {
         return RESP_CODE_OK.equals(respCode);
     }
 
-    public BunnyBaseResponse succeed() {
-        this.setRespCode(RESP_CODE_OK);
-        this.setRespDesc(RESP_DESC_SUCCESS);
-        return this;
+    public void succeed() {
+        fillResp(RESP_CODE_OK, RESP_DESC_SUCCESS);
+    }
+
+    public void failed(String respCode, String respDesc) {
+        fillResp(respCode, respDesc);
+    }
+
+    public void failed(BunnyException exception) {
+        fillResp(exception.respCode(), exception.respDesc());
+    }
+
+    private void fillResp(String respCode, String respDesc) {
+        this.setRespCode(respCode);
+        this.setRespDesc(respDesc);
     }
 }
