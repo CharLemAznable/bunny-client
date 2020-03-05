@@ -61,28 +61,25 @@ public class MockOhClientServer {
                             val calculateRequest = spec(requestMap, CalculateRequest.class);
                             assertEquals("value1", calculateRequest.getChargingParameters().get("key1"));
                             val calculateResponse = calculateRequest.createResponse();
-                            calculateResponse.succeed();
                             calculateResponse.setCalculate(CALCULATE_VALUE);
                             calculateResponse.setUnit(UNIT_VALUE);
                             return new MockResponse().setBody(json(
-                                    nonsenseSignature.sign(calculateResponse)));
+                                    nonsenseSignature.sign(calculateResponse.succeed())));
 
                         case "/bunny/charge":
                             val chargeRequest = spec(requestMap, ChargeRequest.class);
                             assertEquals(CHARGE_VALUE, chargeRequest.getChargeValue());
                             val chargeResponse = chargeRequest.createResponse();
-                            chargeResponse.succeed();
                             return new MockResponse().setBody(json(
-                                    nonsenseSignature.sign(chargeResponse)));
+                                    nonsenseSignature.sign(chargeResponse.succeed())));
 
                         case "/bunny/query":
                             val queryRequest = spec(requestMap, QueryRequest.class);
                             val queryResponse = queryRequest.createResponse();
-                            queryResponse.succeed();
                             queryResponse.setBalance(BALANCE_VALUE);
                             queryResponse.setUnit(UNIT_VALUE);
                             return new MockResponse().setBody(json(
-                                    nonsenseSignature.sign(queryResponse)));
+                                    nonsenseSignature.sign(queryResponse.succeed())));
 
                         case "/bunny/serve":
                             val serveRequest = spec(requestMap, ServeRequest.class);
@@ -91,20 +88,18 @@ public class MockOhClientServer {
                             assertEquals(INTERNAL_VALUE, serveRequest.getInternalRequest().get(INTERNAL_KEY));
                             assertEquals(CALLBACK_URL, serveRequest.getCallbackUrl());
                             val serveResponse = serveRequest.createResponse();
-                            serveResponse.succeed();
                             serveResponse.setInternalResponse(serveRequest.getInternalRequest());
                             serveResponse.setInternalFailure(INTERNAL_FAILURE);
                             return new MockResponse().setBody(json(
-                                    nonsenseSignature.sign(serveResponse)));
+                                    nonsenseSignature.sign(serveResponse.succeed())));
 
                         case "/bunny/serve-callback":
                             val serveCallbackRequest = spec(requestMap, ServeCallbackRequest.class);
                             assertEquals(INTERNAL_VALUE, serveCallbackRequest.getInternalRequest().get(INTERNAL_KEY));
                             assertEquals(SEQ_ID, serveCallbackRequest.getSeqId());
                             val serveCallbackResponse = serveCallbackRequest.createResponse();
-                            serveCallbackResponse.succeed();
                             return new MockResponse().setBody(json(
-                                    nonsenseSignature.sign(serveCallbackResponse)));
+                                    nonsenseSignature.sign(serveCallbackResponse.succeed())));
 
                         default:
                             return new MockResponse()
@@ -182,7 +177,8 @@ public class MockOhClientServer {
                 @Override
                 public MockResponse dispatch(RecordedRequest request) {
                     val resp = new CalculateResponse();
-                    resp.failed("ERROR", "FAILURE");
+                    resp.setRespCode("ERROR");
+                    resp.setRespDesc("FAILURE");
                     return new MockResponse().setBody(json(resp));
                 }
             });
@@ -207,10 +203,10 @@ public class MockOhClientServer {
                     if ("/exception/calculate".equals(request.getPath())) {
                         val resp = new CalculateResponse();
                         resp.setChargingType("error");
-                        resp.succeed();
                         resp.setCalculate(CALCULATE_VALUE);
                         resp.setUnit(UNIT_VALUE);
-                        return new MockResponse().setBody(json(resp));
+                        return new MockResponse()
+                                .setBody(json(resp.succeed()));
                     } else {
                         return new MockResponse()
                                 .setResponseCode(HttpStatus.NOT_FOUND.value())

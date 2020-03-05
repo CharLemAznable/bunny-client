@@ -54,27 +54,24 @@ public class MockEventBusConsumer {
             val calculateRequest = spec(requestMap, CalculateRequest.class);
             assertEquals("value1", calculateRequest.getChargingParameters().get("key1"));
             val calculateResponse = calculateRequest.createResponse();
-            calculateResponse.succeed();
             calculateResponse.setCalculate(CALCULATE_VALUE);
             calculateResponse.setUnit(UNIT_VALUE);
-            message.reply(json(nonsenseSignature.sign(calculateResponse)));
+            message.reply(json(nonsenseSignature.sign(calculateResponse.succeed())));
         });
         eventBus.<String>consumer("/bunny/charge", message -> {
             val requestMap = verifyRequestMap(message);
             val chargeRequest = spec(requestMap, ChargeRequest.class);
             assertEquals(CHARGE_VALUE, chargeRequest.getChargeValue());
             val chargeResponse = chargeRequest.createResponse();
-            chargeResponse.succeed();
-            message.reply(json(nonsenseSignature.sign(chargeResponse)));
+            message.reply(json(nonsenseSignature.sign(chargeResponse.succeed())));
         });
         eventBus.<String>consumer("/bunny/query", message -> {
             val requestMap = verifyRequestMap(message);
             val queryRequest = spec(requestMap, QueryRequest.class);
             val queryResponse = queryRequest.createResponse();
-            queryResponse.succeed();
             queryResponse.setBalance(BALANCE_VALUE);
             queryResponse.setUnit(UNIT_VALUE);
-            message.reply(json(nonsenseSignature.sign(queryResponse)));
+            message.reply(json(nonsenseSignature.sign(queryResponse.succeed())));
         });
         eventBus.<String>consumer("/bunny/serve", message -> {
             val requestMap = verifyRequestMap(message);
@@ -84,10 +81,9 @@ public class MockEventBusConsumer {
             assertEquals(INTERNAL_VALUE, serveRequest.getInternalRequest().get(INTERNAL_KEY));
             assertEquals(CALLBACK_URL, serveRequest.getCallbackUrl());
             val serveResponse = serveRequest.createResponse();
-            serveResponse.succeed();
             serveResponse.setInternalResponse(serveRequest.getInternalRequest());
             serveResponse.setInternalFailure(INTERNAL_FAILURE);
-            message.reply(json(nonsenseSignature.sign(serveResponse)));
+            message.reply(json(nonsenseSignature.sign(serveResponse.succeed())));
         });
         eventBus.<String>consumer("/bunny/serve-callback", message -> {
             val requestMap = verifyRequestMap(message);
@@ -95,8 +91,7 @@ public class MockEventBusConsumer {
             assertEquals(INTERNAL_VALUE, serveCallbackRequest.getInternalRequest().get(INTERNAL_KEY));
             assertEquals(SEQ_ID, serveCallbackRequest.getSeqId());
             val serveCallbackResponse = serveCallbackRequest.createResponse();
-            serveCallbackResponse.succeed();
-            message.reply(json(nonsenseSignature.sign(serveCallbackResponse)));
+            message.reply(json(nonsenseSignature.sign(serveCallbackResponse.succeed())));
         });
 
         CompositeFuture.all(newArrayList(
@@ -185,7 +180,8 @@ public class MockEventBusConsumer {
         val eventBus = vertx.eventBus();
         eventBus.<String>consumer("/error/calculate", message -> {
             val resp = new CalculateResponse();
-            resp.failed("ERROR", "FAILURE");
+            resp.setRespCode("ERROR");
+            resp.setRespDesc("FAILURE");
             message.reply(json(resp));
         });
 
@@ -210,10 +206,9 @@ public class MockEventBusConsumer {
         eventBus.<String>consumer("/exception/calculate", message -> {
             val resp = new CalculateResponse();
             resp.setChargingType("error");
-            resp.succeed();
             resp.setCalculate(CALCULATE_VALUE);
             resp.setUnit(UNIT_VALUE);
-            message.reply(json(resp));
+            message.reply(json(resp.succeed()));
         });
 
         CompositeFuture.all(newArrayList(
