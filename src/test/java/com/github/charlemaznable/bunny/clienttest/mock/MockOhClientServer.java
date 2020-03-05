@@ -25,21 +25,25 @@ import static com.github.charlemaznable.bunny.client.domain.BunnyBaseResponse.RE
 import static com.github.charlemaznable.core.codec.Json.json;
 import static com.github.charlemaznable.core.codec.Json.spec;
 import static com.github.charlemaznable.core.codec.Json.unJson;
+import static com.github.charlemaznable.core.lang.Mapp.newHashMap;
 import static com.github.charlemaznable.core.lang.Mapp.of;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class MockOhClientServer {
 
     private static final int CALCULATE_VALUE = 12;
     private static final int CHARGE_VALUE = 34;
-    private static final String PAYMENT_ID_VALUE = "paymentId";
-    private static final int COMMIT_VALUE = 56;
-    private static final int ROLLBACK_VALUE = 78;
-    private static final int BALANCE_VALUE = 90;
+    private static final int BALANCE_VALUE = 56;
     private static final String UNIT_VALUE = "unit";
+    private static final Integer PAYMENT_VALUE = 78;
+    private static final String SERVE_TYPE = "proxy";
+    private static final String INTERNAL_KEY = "key";
+    private static final String INTERNAL_VALUE = "value";
+    private static final String CALLBACK_URL = "callback-url";
+    private static final String INTERNAL_FAILURE = "internal-failure";
+    private static final String SEQ_ID = "seq-id";
     private static final NonsenseSignature nonsenseSignature = new NonsenseSignature();
 
     @SneakyThrows
@@ -82,20 +86,23 @@ public class MockOhClientServer {
 
                         case "/bunny/serve":
                             val serveRequest = spec(requestMap, ServeRequest.class);
-                            assertNull(serveRequest.getPaymentValue());
-                            assertNull(serveRequest.getChargingParameters());
+                            assertEquals(PAYMENT_VALUE, serveRequest.getPaymentValue());
+                            assertTrue(serveRequest.getChargingParameters().isEmpty());
+                            assertEquals(INTERNAL_VALUE, serveRequest.getInternalRequest().get(INTERNAL_KEY));
+                            assertEquals(CALLBACK_URL, serveRequest.getCallbackUrl());
                             val serveResponse = serveRequest.createResponse();
                             serveResponse.succeed();
-                            serveResponse.setServeType(serveRequest.getServeType());
                             serveResponse.setInternalResponse(serveRequest.getInternalRequest());
+                            serveResponse.setInternalFailure(INTERNAL_FAILURE);
                             return new MockResponse().setBody(json(
                                     nonsenseSignature.sign(serveResponse)));
 
                         case "/bunny/serve-callback":
                             val serveCallbackRequest = spec(requestMap, ServeCallbackRequest.class);
+                            assertEquals(INTERNAL_VALUE, serveCallbackRequest.getInternalRequest().get(INTERNAL_KEY));
+                            assertEquals(SEQ_ID, serveCallbackRequest.getSeqId());
                             val serveCallbackResponse = serveCallbackRequest.createResponse();
                             serveCallbackResponse.succeed();
-                            serveCallbackResponse.setServeType(serveCallbackRequest.getServeType());
                             return new MockResponse().setBody(json(
                                     nonsenseSignature.sign(serveCallbackResponse)));
 
@@ -139,27 +146,32 @@ public class MockOhClientServer {
             assertEquals(UNIT_VALUE, queryResponse.getUnit());
 
             val serveRequest = new ServeRequest();
-            serveRequest.setChargingType("query");
-            serveRequest.setServeType("proxy");
-            serveRequest.setInternalRequest(of("key2", "value2"));
+            serveRequest.setChargingType("serve");
+            serveRequest.setPaymentValue(PAYMENT_VALUE);
+            serveRequest.setChargingParameters(newHashMap());
+            serveRequest.setServeType(SERVE_TYPE);
+            serveRequest.setInternalRequest(of(INTERNAL_KEY, INTERNAL_VALUE));
+            serveRequest.setCallbackUrl(CALLBACK_URL);
             val serveResponse = bunnyOhClient.request(serveRequest);
             assertEquals(serveRequest.getChargingType(), serveResponse.getChargingType());
             assertTrue(serveResponse.isSuccess());
             assertEquals(RESP_CODE_OK, serveResponse.getRespCode());
             assertEquals(RESP_DESC_SUCCESS, serveResponse.getRespDesc());
-            assertEquals("proxy", serveResponse.getServeType());
-            assertEquals("value2", serveResponse.getInternalResponse().get("key2"));
+            assertEquals(SERVE_TYPE, serveResponse.getServeType());
+            assertEquals(INTERNAL_VALUE, serveResponse.getInternalResponse().get(INTERNAL_KEY));
+            assertEquals(INTERNAL_FAILURE, serveResponse.getInternalFailure());
 
             val serveCallbackRequest = new ServeCallbackRequest();
-            serveCallbackRequest.setChargingType("query");
-            serveCallbackRequest.setServeType("proxy");
-            serveCallbackRequest.setInternalRequest(of("key3", "value3"));
+            serveCallbackRequest.setChargingType("serve");
+            serveCallbackRequest.setServeType(SERVE_TYPE);
+            serveCallbackRequest.setInternalRequest(of(INTERNAL_KEY, INTERNAL_VALUE));
+            serveCallbackRequest.setSeqId(SEQ_ID);
             val serveCallbackResponse = bunnyOhClient.request(serveCallbackRequest);
             assertEquals(serveCallbackRequest.getChargingType(), serveCallbackResponse.getChargingType());
             assertTrue(serveCallbackResponse.isSuccess());
             assertEquals(RESP_CODE_OK, serveCallbackResponse.getRespCode());
             assertEquals(RESP_DESC_SUCCESS, serveCallbackResponse.getRespDesc());
-            assertEquals("proxy", serveCallbackResponse.getServeType());
+            assertEquals(SERVE_TYPE, serveCallbackResponse.getServeType());
         }
     }
 
