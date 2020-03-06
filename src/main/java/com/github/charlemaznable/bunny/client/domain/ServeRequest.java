@@ -1,7 +1,5 @@
 package com.github.charlemaznable.bunny.client.domain;
 
-import com.github.charlemaznable.core.net.common.CncRequest;
-import com.github.charlemaznable.core.net.common.CncResponse;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.val;
@@ -13,8 +11,7 @@ import java.util.Map;
  */
 @Getter
 @Setter
-public abstract class ServeRequest<T extends CncRequest<U>, U extends CncResponse>
-        extends BunnyBaseRequest<ServeResponse<U>> {
+public abstract class ServeRequest<T, U> extends BunnyBaseRequest<ServeResponse<U>> {
 
     /**
      * 扣费计量, 表示本次需扣减的服务计量, 如短信条数/流量数值

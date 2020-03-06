@@ -1,6 +1,5 @@
 package com.github.charlemaznable.bunny.client.domain;
 
-import com.github.charlemaznable.core.net.common.CncResponse;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,7 +8,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public abstract class ServeResponse<U extends CncResponse> extends BunnyBaseResponse {
+public class ServeResponse<U> extends BunnyBaseResponse {
 
     /**
      * 服务类型

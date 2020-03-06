@@ -7,7 +7,6 @@ import com.github.charlemaznable.bunny.client.domain.ChargeRequest;
 import com.github.charlemaznable.bunny.client.domain.QueryRequest;
 import com.github.charlemaznable.bunny.client.domain.UniversalServeCallbackRequest;
 import com.github.charlemaznable.bunny.client.domain.UniversalServeRequest;
-import com.github.charlemaznable.bunny.client.domain.UniversalServeResponse;
 import com.github.charlemaznable.bunny.client.eventbus.BunnyEventBus;
 import com.github.charlemaznable.bunny.client.eventbus.BunnyEventBusException;
 import com.github.charlemaznable.core.codec.NonsenseSignature;
@@ -30,7 +29,6 @@ import static com.github.charlemaznable.core.codec.Json.unJson;
 import static com.github.charlemaznable.core.lang.Listt.newArrayList;
 import static com.github.charlemaznable.core.lang.Mapp.newHashMap;
 import static com.github.charlemaznable.core.lang.Mapp.of;
-import static org.joor.Reflect.onClass;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -88,11 +86,7 @@ public class MockEventBusConsumer {
             assertEquals(CALLBACK_URL, serveRequest.getCallbackUrl());
             val serveResponse = serveRequest.createResponse();
             serveResponse.succeed();
-            val internalResponseClass = serveRequest.getInternalRequest().responseClass();
-            UniversalServeResponse.InternalResponse internalResponse
-                    = onClass(internalResponseClass).create().get();
-            internalResponse.putAll(serveRequest.getInternalRequest());
-            serveResponse.setInternalResponse(internalResponse);
+            serveResponse.setInternalResponse(serveRequest.getInternalRequest());
             serveResponse.setUnexpectedFailure(UNEXPECTED_FAILURE);
             message.reply(json(nonsenseSignature.sign(serveResponse)));
         });
@@ -156,9 +150,7 @@ public class MockEventBusConsumer {
                     serveRequest.setPaymentValue(PAYMENT_VALUE);
                     serveRequest.setChargingParameters(newHashMap());
                     serveRequest.setServeType(SERVE_TYPE);
-                    val internalRequest = new UniversalServeRequest.InternalRequest();
-                    internalRequest.put(INTERNAL_KEY, INTERNAL_VALUE);
-                    serveRequest.setInternalRequest(internalRequest);
+                    serveRequest.setInternalRequest(of(INTERNAL_KEY, INTERNAL_VALUE));
                     serveRequest.setCallbackUrl(CALLBACK_URL);
                     bunnyEventBus.request(serveRequest, async -> test.verify(() -> {
                         val serveResponse = async.result();
@@ -176,9 +168,7 @@ public class MockEventBusConsumer {
                     val serveCallbackRequest = new UniversalServeCallbackRequest();
                     serveCallbackRequest.setChargingType("serve");
                     serveCallbackRequest.setServeType(SERVE_TYPE);
-                    val callbackInternalRequest = new UniversalServeCallbackRequest.InternalRequest();
-                    callbackInternalRequest.put(INTERNAL_KEY, INTERNAL_VALUE);
-                    serveCallbackRequest.setInternalRequest(callbackInternalRequest);
+                    serveCallbackRequest.setInternalRequest(of(INTERNAL_KEY, INTERNAL_VALUE));
                     serveCallbackRequest.setSeqId(SEQ_ID);
                     bunnyEventBus.request(serveCallbackRequest, async -> test.verify(() -> {
                         val serveCallbackResponse = async.result();
