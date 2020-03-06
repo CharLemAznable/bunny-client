@@ -4,8 +4,8 @@ import com.github.charlemaznable.bunny.client.domain.CalculateRequest;
 import com.github.charlemaznable.bunny.client.domain.CalculateResponse;
 import com.github.charlemaznable.bunny.client.domain.ChargeRequest;
 import com.github.charlemaznable.bunny.client.domain.QueryRequest;
-import com.github.charlemaznable.bunny.client.domain.UniversalServeCallbackRequest;
-import com.github.charlemaznable.bunny.client.domain.UniversalServeRequest;
+import com.github.charlemaznable.bunny.client.domain.ServeCallbackRequest;
+import com.github.charlemaznable.bunny.client.domain.ServeRequest;
 import com.github.charlemaznable.bunny.client.ohclient.BunnyOhClient;
 import com.github.charlemaznable.bunny.client.ohclient.BunnyOhClientException;
 import com.github.charlemaznable.core.codec.NonsenseSignature;
@@ -85,7 +85,7 @@ public class MockOhClientServer {
                                     nonsenseSignature.sign(queryResponse)));
 
                         case "/bunny/serve":
-                            val serveRequest = spec(requestMap, UniversalServeRequest.class);
+                            val serveRequest = spec(requestMap, ServeRequest.class);
                             assertEquals(PAYMENT_VALUE, serveRequest.getPaymentValue());
                             assertTrue(serveRequest.getChargingParameters().isEmpty());
                             assertEquals(INTERNAL_VALUE, serveRequest.getInternalRequest().get(INTERNAL_KEY));
@@ -98,7 +98,7 @@ public class MockOhClientServer {
                                     nonsenseSignature.sign(serveResponse)));
 
                         case "/bunny/serve-callback":
-                            val serveCallbackRequest = spec(requestMap, UniversalServeCallbackRequest.class);
+                            val serveCallbackRequest = spec(requestMap, ServeCallbackRequest.class);
                             assertEquals(INTERNAL_VALUE, serveCallbackRequest.getInternalRequest().get(INTERNAL_KEY));
                             assertEquals(SEQ_ID, serveCallbackRequest.getSeqId());
                             val serveCallbackResponse = serveCallbackRequest.createResponse();
@@ -146,7 +146,7 @@ public class MockOhClientServer {
             assertEquals(BALANCE_VALUE, queryResponse.getBalance());
             assertEquals(UNIT_VALUE, queryResponse.getUnit());
 
-            val serveRequest = new UniversalServeRequest();
+            val serveRequest = new ServeRequest();
             serveRequest.setChargingType("serve");
             serveRequest.setPaymentValue(PAYMENT_VALUE);
             serveRequest.setChargingParameters(newHashMap());
@@ -162,7 +162,7 @@ public class MockOhClientServer {
             assertEquals(INTERNAL_VALUE, serveResponse.getInternalResponse().get(INTERNAL_KEY));
             assertEquals(UNEXPECTED_FAILURE, serveResponse.getUnexpectedFailure());
 
-            val serveCallbackRequest = new UniversalServeCallbackRequest();
+            val serveCallbackRequest = new ServeCallbackRequest();
             serveCallbackRequest.setChargingType("serve");
             serveCallbackRequest.setServeType(SERVE_TYPE);
             serveCallbackRequest.setInternalRequest(of(INTERNAL_KEY, INTERNAL_VALUE));

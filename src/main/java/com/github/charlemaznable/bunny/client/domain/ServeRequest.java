@@ -11,7 +11,7 @@ import java.util.Map;
  */
 @Getter
 @Setter
-public abstract class ServeRequest<T, U> extends BunnyBaseRequest<ServeResponse<U>> {
+public class ServeRequest extends BunnyBaseRequest<ServeResponse> {
 
     /**
      * 扣费计量, 表示本次需扣减的服务计量, 如短信条数/流量数值
@@ -30,7 +30,7 @@ public abstract class ServeRequest<T, U> extends BunnyBaseRequest<ServeResponse<
     /**
      * 服务请求
      */
-    private T internalRequest;
+    private Map<String, Object> internalRequest;
     /**
      * 服务结果回调地址
      */
@@ -41,7 +41,12 @@ public abstract class ServeRequest<T, U> extends BunnyBaseRequest<ServeResponse<
     }
 
     @Override
-    public ServeResponse<U> createResponse() {
+    public Class<? extends ServeResponse> responseClass() {
+        return ServeResponse.class;
+    }
+
+    @Override
+    public ServeResponse createResponse() {
         val serveResponse = super.createResponse();
         serveResponse.setServeType(this.serveType);
         return serveResponse;

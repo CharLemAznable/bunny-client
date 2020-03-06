@@ -5,8 +5,8 @@ import com.github.charlemaznable.bunny.client.domain.CalculateRequest;
 import com.github.charlemaznable.bunny.client.domain.CalculateResponse;
 import com.github.charlemaznable.bunny.client.domain.ChargeRequest;
 import com.github.charlemaznable.bunny.client.domain.QueryRequest;
-import com.github.charlemaznable.bunny.client.domain.UniversalServeCallbackRequest;
-import com.github.charlemaznable.bunny.client.domain.UniversalServeRequest;
+import com.github.charlemaznable.bunny.client.domain.ServeCallbackRequest;
+import com.github.charlemaznable.bunny.client.domain.ServeRequest;
 import com.github.charlemaznable.bunny.client.eventbus.BunnyEventBus;
 import com.github.charlemaznable.bunny.client.eventbus.BunnyEventBusException;
 import com.github.charlemaznable.core.codec.NonsenseSignature;
@@ -79,7 +79,7 @@ public class MockEventBusConsumer {
         });
         eventBus.<String>consumer("/bunny/serve", message -> {
             val requestMap = verifyRequestMap(message);
-            val serveRequest = spec(requestMap, UniversalServeRequest.class);
+            val serveRequest = spec(requestMap, ServeRequest.class);
             assertEquals(PAYMENT_VALUE, serveRequest.getPaymentValue());
             assertTrue(serveRequest.getChargingParameters().isEmpty());
             assertEquals(INTERNAL_VALUE, serveRequest.getInternalRequest().get(INTERNAL_KEY));
@@ -92,7 +92,7 @@ public class MockEventBusConsumer {
         });
         eventBus.<String>consumer("/bunny/serve-callback", message -> {
             val requestMap = verifyRequestMap(message);
-            val serveCallbackRequest = spec(requestMap, UniversalServeCallbackRequest.class);
+            val serveCallbackRequest = spec(requestMap, ServeCallbackRequest.class);
             assertEquals(INTERNAL_VALUE, serveCallbackRequest.getInternalRequest().get(INTERNAL_KEY));
             assertEquals(SEQ_ID, serveCallbackRequest.getSeqId());
             val serveCallbackResponse = serveCallbackRequest.createResponse();
@@ -145,7 +145,7 @@ public class MockEventBusConsumer {
                     }));
                 }),
                 Future.<Void>future(f -> {
-                    val serveRequest = new UniversalServeRequest();
+                    val serveRequest = new ServeRequest();
                     serveRequest.setChargingType("serve");
                     serveRequest.setPaymentValue(PAYMENT_VALUE);
                     serveRequest.setChargingParameters(newHashMap());
@@ -165,7 +165,7 @@ public class MockEventBusConsumer {
                     }));
                 }),
                 Future.<Void>future(f -> {
-                    val serveCallbackRequest = new UniversalServeCallbackRequest();
+                    val serveCallbackRequest = new ServeCallbackRequest();
                     serveCallbackRequest.setChargingType("serve");
                     serveCallbackRequest.setServeType(SERVE_TYPE);
                     serveCallbackRequest.setInternalRequest(of(INTERNAL_KEY, INTERNAL_VALUE));

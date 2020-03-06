@@ -3,12 +3,14 @@ package com.github.charlemaznable.bunny.client.domain;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Map;
+
 /**
  * 服务接口 响应
  */
 @Getter
 @Setter
-public class ServeResponse<U> extends BunnyBaseResponse {
+public class ServeResponse extends BunnyBaseResponse {
 
     /**
      * 服务类型
@@ -17,7 +19,7 @@ public class ServeResponse<U> extends BunnyBaseResponse {
     /**
      * 服务响应
      */
-    private U internalResponse;
+    private Map<String, Object> internalResponse;
     /**
      * 非期望的内部异常信息
      */

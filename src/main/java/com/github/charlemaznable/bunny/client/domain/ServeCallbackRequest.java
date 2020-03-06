@@ -4,13 +4,14 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.val;
 
+import java.util.Map;
+
 /**
  * 服务结果回调接口 请求
  */
 @Getter
 @Setter
-public abstract class ServeCallbackRequest<T>
-        extends BunnyBaseRequest<ServeCallbackResponse> {
+public class ServeCallbackRequest extends BunnyBaseRequest<ServeCallbackResponse> {
 
     /**
      * 服务类型
@@ -19,7 +20,7 @@ public abstract class ServeCallbackRequest<T>
     /**
      * 服务请求
      */
-    private T internalRequest;
+    private Map<String, Object> internalRequest;
     /**
      * 服务接口调用流水号
      */
