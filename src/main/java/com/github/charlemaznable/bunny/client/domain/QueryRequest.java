@@ -15,7 +15,7 @@ public class QueryRequest extends BunnyBaseRequest<QueryResponse> {
     }
 
     @Override
-    public Class<QueryResponse> responseClass() {
+    public Class<? extends QueryResponse> responseClass() {
         return QueryResponse.class;
     }
 }

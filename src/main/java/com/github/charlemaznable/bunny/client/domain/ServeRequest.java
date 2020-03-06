@@ -1,5 +1,7 @@
 package com.github.charlemaznable.bunny.client.domain;
 
+import com.github.charlemaznable.core.net.common.CncRequest;
+import com.github.charlemaznable.core.net.common.CncResponse;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.val;
@@ -11,7 +13,8 @@ import java.util.Map;
  */
 @Getter
 @Setter
-public class ServeRequest extends BunnyBaseRequest<ServeResponse> {
+public abstract class ServeRequest<T extends CncRequest<U>, U extends CncResponse>
+        extends BunnyBaseRequest<ServeResponse<U>> {
 
     /**
      * 扣费计量, 表示本次需扣减的服务计量, 如短信条数/流量数值
@@ -30,7 +33,7 @@ public class ServeRequest extends BunnyBaseRequest<ServeResponse> {
     /**
      * 服务请求
      */
-    private Map<String, Object> internalRequest;
+    private T internalRequest;
     /**
      * 服务结果回调地址
      */
@@ -41,12 +44,7 @@ public class ServeRequest extends BunnyBaseRequest<ServeResponse> {
     }
 
     @Override
-    public Class<ServeResponse> responseClass() {
-        return ServeResponse.class;
-    }
-
-    @Override
-    public ServeResponse createResponse() {
+    public ServeResponse<U> createResponse() {
         val serveResponse = super.createResponse();
         serveResponse.setServeType(this.serveType);
         return serveResponse;

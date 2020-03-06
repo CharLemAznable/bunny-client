@@ -22,7 +22,7 @@ public class CalculateRequest extends BunnyBaseRequest<CalculateResponse> {
     }
 
     @Override
-    public Class<CalculateResponse> responseClass() {
+    public Class<? extends CalculateResponse> responseClass() {
         return CalculateResponse.class;
     }
 }
