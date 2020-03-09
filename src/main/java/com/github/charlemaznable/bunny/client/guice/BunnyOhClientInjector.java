@@ -11,10 +11,10 @@ public class BunnyOhClientInjector {
     private OhInjector ohInjector;
 
     public BunnyOhClientInjector() {
-        this(new BunnyConfigModuleBuilder());
+        this(new BunnyClientConfigModuleBuilder());
     }
 
-    public BunnyOhClientInjector(BunnyConfigModuleBuilder configModuleBuilder) {
+    public BunnyOhClientInjector(BunnyClientConfigModuleBuilder configModuleBuilder) {
         this(configModuleBuilder.build());
     }
 

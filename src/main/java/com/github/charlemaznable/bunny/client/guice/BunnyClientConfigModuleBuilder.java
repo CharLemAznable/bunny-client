@@ -8,19 +8,19 @@ import com.google.inject.util.Providers;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-public final class BunnyConfigModuleBuilder {
+public final class BunnyClientConfigModuleBuilder {
 
     private Module configModule;
 
-    public BunnyConfigModuleBuilder() {
+    public BunnyClientConfigModuleBuilder() {
         this((BunnyClientConfig) null);
     }
 
-    public BunnyConfigModuleBuilder(Class<? extends BunnyClientConfig> configClass) {
+    public BunnyClientConfigModuleBuilder(Class<? extends BunnyClientConfig> configClass) {
         this(new MinerInjector().createModule(configClass));
     }
 
-    public BunnyConfigModuleBuilder(BunnyClientConfig configImpl) {
+    public BunnyClientConfigModuleBuilder(BunnyClientConfig configImpl) {
         this(new AbstractModule() {
             @Override
             protected void configure() {

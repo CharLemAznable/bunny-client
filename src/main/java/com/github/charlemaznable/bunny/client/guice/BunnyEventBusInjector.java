@@ -14,10 +14,10 @@ public class BunnyEventBusInjector {
     private Module combinedModule;
 
     public BunnyEventBusInjector(Vertx vertx) {
-        this(vertx, new BunnyConfigModuleBuilder());
+        this(vertx, new BunnyClientConfigModuleBuilder());
     }
 
-    public BunnyEventBusInjector(Vertx vertx, BunnyConfigModuleBuilder configModuleBuilder) {
+    public BunnyEventBusInjector(Vertx vertx, BunnyClientConfigModuleBuilder configModuleBuilder) {
         this(vertx, configModuleBuilder.build());
     }
 
