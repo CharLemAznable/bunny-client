@@ -1,7 +1,6 @@
 package com.github.charlemaznable.bunny.clienttest.eventbus.guice.errorconfig;
 
 import com.github.charlemaznable.bunny.client.eventbus.BunnyEventBus;
-import com.github.charlemaznable.bunny.client.guice.BunnyClientConfigModuleBuilder;
 import com.github.charlemaznable.bunny.client.guice.BunnyEventBusInjector;
 import com.github.charlemaznable.bunny.clienttest.mock.BunnyClientErrorConfig;
 import com.google.inject.Guice;
@@ -19,8 +18,7 @@ public class BunnyEventBusErrorTest {
 
     @Test
     public void testBunnyEventBusError(Vertx vertx, VertxTestContext test) {
-        val configModuleBuilder = new BunnyClientConfigModuleBuilder(new BunnyClientErrorConfig());
-        val eventBusInjector = new BunnyEventBusInjector(vertx, configModuleBuilder);
+        val eventBusInjector = new BunnyEventBusInjector(vertx, new BunnyClientErrorConfig());
         val injector = Guice.createInjector(eventBusInjector.createModule());
         val bunnyEventBus = injector.getInstance(BunnyEventBus.class);
         testErrorConsumer(vertx, bunnyEventBus, test);

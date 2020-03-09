@@ -1,7 +1,9 @@
 package com.github.charlemaznable.bunny.client.guice;
 
+import com.github.charlemaznable.bunny.client.config.BunnyClientConfig;
 import com.github.charlemaznable.bunny.client.eventbus.BunnyEventBus;
 import com.github.charlemaznable.core.guice.Modulee;
+import com.github.charlemaznable.core.miner.MinerInjector;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -14,11 +16,20 @@ public class BunnyEventBusInjector {
     private Module combinedModule;
 
     public BunnyEventBusInjector(Vertx vertx) {
-        this(vertx, new BunnyClientConfigModuleBuilder());
+        this(vertx, (BunnyClientConfig) null);
     }
 
-    public BunnyEventBusInjector(Vertx vertx, BunnyClientConfigModuleBuilder configModuleBuilder) {
-        this(vertx, configModuleBuilder.build());
+    public BunnyEventBusInjector(Vertx vertx, Class<? extends BunnyClientConfig> configClass) {
+        this(vertx, new MinerInjector().createModule(configClass));
+    }
+
+    public BunnyEventBusInjector(Vertx vertx, BunnyClientConfig configImpl) {
+        this(vertx, new AbstractModule() {
+            @Override
+            protected void configure() {
+                bind(BunnyClientConfig.class).toProvider(Providers.of(configImpl));
+            }
+        });
     }
 
     public BunnyEventBusInjector(Vertx vertx, Module configModule) {

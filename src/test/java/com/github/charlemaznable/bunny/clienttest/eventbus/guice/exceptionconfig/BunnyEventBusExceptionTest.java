@@ -1,6 +1,5 @@
 package com.github.charlemaznable.bunny.clienttest.eventbus.guice.exceptionconfig;
 
-import com.github.charlemaznable.bunny.client.guice.BunnyClientConfigModuleBuilder;
 import com.github.charlemaznable.bunny.client.guice.BunnyEventBusInjector;
 import com.github.charlemaznable.bunny.clienttest.mock.BunnyClientExceptionConfig;
 import io.vertx.core.Vertx;
@@ -33,8 +32,7 @@ public class BunnyEventBusExceptionTest {
 
     @Test
     public void testBunnyEventBusException(Vertx vertx, VertxTestContext test) {
-        val configModuleBuilder = new BunnyClientConfigModuleBuilder(BunnyClientExceptionConfig.class);
-        val eventBusInjector = new BunnyEventBusInjector(vertx, configModuleBuilder);
+        val eventBusInjector = new BunnyEventBusInjector(vertx, BunnyClientExceptionConfig.class);
         val bunnyEventBus = eventBusInjector.getEventBus();
         testExceptionConsumer(vertx, bunnyEventBus, test);
     }

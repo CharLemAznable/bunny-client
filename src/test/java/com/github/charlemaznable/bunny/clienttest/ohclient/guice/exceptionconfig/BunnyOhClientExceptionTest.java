@@ -1,6 +1,5 @@
 package com.github.charlemaznable.bunny.clienttest.ohclient.guice.exceptionconfig;
 
-import com.github.charlemaznable.bunny.client.guice.BunnyClientConfigModuleBuilder;
 import com.github.charlemaznable.bunny.client.guice.BunnyOhClientInjector;
 import com.github.charlemaznable.bunny.clienttest.mock.BunnyClientExceptionConfig;
 import lombok.val;
@@ -28,8 +27,7 @@ public class BunnyOhClientExceptionTest {
 
     @Test
     public void testBunnyOhClientException() {
-        val configModuleBuilder = new BunnyClientConfigModuleBuilder(BunnyClientExceptionConfig.class);
-        val ohClientInjector = new BunnyOhClientInjector(configModuleBuilder);
+        val ohClientInjector = new BunnyOhClientInjector(BunnyClientExceptionConfig.class);
         val bunnyOhClient = ohClientInjector.getClient();
         testExceptionServer(bunnyOhClient);
     }

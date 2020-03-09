@@ -1,6 +1,5 @@
 package com.github.charlemaznable.bunny.clienttest.ohclient.guice.errorconfig;
 
-import com.github.charlemaznable.bunny.client.guice.BunnyClientConfigModuleBuilder;
 import com.github.charlemaznable.bunny.client.guice.BunnyOhClientInjector;
 import com.github.charlemaznable.bunny.client.ohclient.BunnyOhClient;
 import com.github.charlemaznable.bunny.clienttest.mock.BunnyClientErrorConfig;
@@ -14,8 +13,7 @@ public class BunnyOhClientErrorTest {
 
     @Test
     public void testBunnyOhClientError() {
-        val configModuleBuilder = new BunnyClientConfigModuleBuilder(new BunnyClientErrorConfig());
-        val ohClientInjector = new BunnyOhClientInjector(configModuleBuilder);
+        val ohClientInjector = new BunnyOhClientInjector(new BunnyClientErrorConfig());
         val injector = Guice.createInjector(ohClientInjector.createModule());
         val bunnyOhClient = injector.getInstance(BunnyOhClient.class);
         testErrorServer(bunnyOhClient);
