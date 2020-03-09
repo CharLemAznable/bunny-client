@@ -1,7 +1,11 @@
 package com.github.charlemaznable.bunny.clienttest.eventbus.guice.exceptionconfig;
 
-import com.github.charlemaznable.bunny.client.guice.BunnyEventBusInjector;
+import com.github.charlemaznable.bunny.client.eventbus.BunnyEventBus;
+import com.github.charlemaznable.bunny.client.guice.BunnyEventBusModular;
 import com.github.charlemaznable.bunny.clienttest.mock.BunnyClientExceptionConfig;
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.util.Providers;
 import io.vertx.core.Vertx;
 import io.vertx.junit5.VertxExtension;
 import io.vertx.junit5.VertxTestContext;
@@ -32,8 +36,15 @@ public class BunnyEventBusExceptionTest {
 
     @Test
     public void testBunnyEventBusException(Vertx vertx, VertxTestContext test) {
-        val eventBusInjector = new BunnyEventBusInjector(vertx, BunnyClientExceptionConfig.class);
-        val bunnyEventBus = eventBusInjector.getEventBus();
+        val vertxModule = new AbstractModule() {
+            @Override
+            protected void configure() {
+                bind(Vertx.class).toProvider(Providers.of(vertx));
+            }
+        };
+        val eventBusModular = new BunnyEventBusModular(BunnyClientExceptionConfig.class);
+        val injector = Guice.createInjector(eventBusModular.createModule(), vertxModule);
+        val bunnyEventBus = injector.getInstance(BunnyEventBus.class);
         testExceptionConsumer(vertx, bunnyEventBus, test);
     }
 }
