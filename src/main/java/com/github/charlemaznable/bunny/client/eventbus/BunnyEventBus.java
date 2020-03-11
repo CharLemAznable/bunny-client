@@ -33,10 +33,6 @@ public final class BunnyEventBus {
     private final BunnyClientConfig bunnyClientConfig;
     private NonsenseSignature nonsenseSignature = new NonsenseSignature();
 
-    public BunnyEventBus(Vertx vertx) {
-        this(vertx, null);
-    }
-
     @Inject
     @Autowired
     public BunnyEventBus(Vertx vertx, @Nullable BunnyClientConfig bunnyClientConfig) {

@@ -17,10 +17,6 @@ public final class BunnyOhClientUrlProvider implements UrlProvider {
 
     private final BunnyClientConfig bunnyClientConfig;
 
-    public BunnyOhClientUrlProvider() {
-        this(null);
-    }
-
     @Inject
     @Autowired
     public BunnyOhClientUrlProvider(@Nullable BunnyClientConfig bunnyClientConfig) {
