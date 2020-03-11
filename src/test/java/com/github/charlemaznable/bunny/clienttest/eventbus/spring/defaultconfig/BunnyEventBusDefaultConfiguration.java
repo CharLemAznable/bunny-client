@@ -2,7 +2,6 @@ package com.github.charlemaznable.bunny.clienttest.eventbus.spring.defaultconfig
 
 import com.github.charlemaznable.bunny.client.spring.BunnyEventBusImport;
 import com.github.charlemaznable.core.vertx.spring.SpringVertxImport;
-import org.springframework.context.annotation.Configuration;
 
 import javax.annotation.PostConstruct;
 
@@ -10,7 +9,6 @@ import static com.github.charlemaznable.core.miner.MinerFactory.springMinerLoade
 import static com.github.charlemaznable.core.net.ohclient.OhFactory.springOhLoader;
 import static org.joor.Reflect.on;
 
-@Configuration
 @SpringVertxImport
 @BunnyEventBusImport
 public class BunnyEventBusDefaultConfiguration {
