@@ -8,7 +8,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Module;
 import com.google.inject.util.Providers;
 
-public class BunnyOhClientModular {
+public final class BunnyOhClientModular {
 
     private OhModular ohModular;
 

@@ -8,7 +8,7 @@ import com.google.inject.util.Providers;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-public class BunnyEventBusModular {
+public final class BunnyEventBusModular {
 
     private Module configModule;
 
