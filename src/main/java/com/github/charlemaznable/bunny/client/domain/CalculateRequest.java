@@ -15,7 +15,7 @@ public class CalculateRequest extends BunnyBaseRequest<CalculateResponse> {
     /**
      * 计费参数, 依据计费类型选择计费插件, 由插件解析
      */
-    private Map<String, String> chargingParameters;
+    private Map<String, Object> chargingParameters;
 
     public CalculateRequest() {
         this.bunnyAddress = BunnyAddress.CALCULATE;

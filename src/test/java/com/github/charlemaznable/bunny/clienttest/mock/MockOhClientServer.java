@@ -25,7 +25,6 @@ import static com.github.charlemaznable.bunny.client.domain.BunnyBaseResponse.RE
 import static com.github.charlemaznable.core.codec.Json.json;
 import static com.github.charlemaznable.core.codec.Json.spec;
 import static com.github.charlemaznable.core.codec.Json.unJson;
-import static com.github.charlemaznable.core.lang.Mapp.newHashMap;
 import static com.github.charlemaznable.core.lang.Mapp.of;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -87,7 +86,6 @@ public class MockOhClientServer {
                         case "/bunny/serve":
                             val serveRequest = spec(requestMap, ServeRequest.class);
                             assertEquals(PAYMENT_VALUE, serveRequest.getPaymentValue());
-                            assertTrue(serveRequest.getChargingParameters().isEmpty());
                             assertEquals(INTERNAL_VALUE, serveRequest.getInternalRequest().get(INTERNAL_KEY));
                             assertEquals(CALLBACK_URL, serveRequest.getCallbackUrl());
                             val serveResponse = serveRequest.createResponse();
@@ -149,7 +147,6 @@ public class MockOhClientServer {
             val serveRequest = new ServeRequest();
             serveRequest.setChargingType("serve");
             serveRequest.setPaymentValue(PAYMENT_VALUE);
-            serveRequest.setChargingParameters(newHashMap());
             serveRequest.setServeType(SERVE_TYPE);
             serveRequest.setInternalRequest(of(INTERNAL_KEY, INTERNAL_VALUE));
             serveRequest.setCallbackUrl(CALLBACK_URL);

@@ -15,14 +15,9 @@ public class ServeRequest extends BunnyBaseRequest<ServeResponse> {
 
     /**
      * 扣费计量, 表示本次需扣减的服务计量, 如短信条数/流量数值
-     * 如为空, 则使用计费插件进行计算
+     * 如为空, 则使用计费插件进行计算, 计费参数使用服务请求字段内容
      */
     private Integer paymentValue;
-    /**
-     * 计费参数, 依据计费类型选择计费插件, 由插件解析
-     * 如扣费计量不为空, 则忽略
-     */
-    private Map<String, String> chargingParameters;
     /**
      * 服务类型
      */
