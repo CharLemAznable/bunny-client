@@ -17,7 +17,7 @@ public final class BunnyOhClientModular {
     }
 
     public BunnyOhClientModular(Class<? extends BunnyClientConfig> configClass) {
-        this(new MinerModular().createModule(configClass));
+        this(new MinerModular().bindClasses(configClass).createModule());
     }
 
     public BunnyOhClientModular(BunnyClientConfig configImpl) {
@@ -30,11 +30,11 @@ public final class BunnyOhClientModular {
     }
 
     public BunnyOhClientModular(Module configModule) {
-        this.ohModular = new OhModular(configModule);
+        this.ohModular = new OhModular(configModule).bindClasses(BunnyOhClient.class);
     }
 
     public Module createModule() {
-        return this.ohModular.createModule(BunnyOhClient.class);
+        return this.ohModular.createModule();
     }
 
     public BunnyOhClient getClient() {

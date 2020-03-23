@@ -17,7 +17,7 @@ public final class BunnyEventBusModular {
     }
 
     public BunnyEventBusModular(Class<? extends BunnyClientConfig> configClass) {
-        this(new MinerModular().createModule(configClass));
+        this(new MinerModular().bindClasses(configClass).createModule());
     }
 
     public BunnyEventBusModular(BunnyClientConfig configImpl) {
