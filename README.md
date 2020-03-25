@@ -34,6 +34,14 @@ with baby lambs across sunny green meadows.
 
 ##### Maven Dependency
 
+```xml
+<dependency>
+  <groupId>com.github.charlemaznable</groupId>
+  <artifactId>bunny-client</artifactId>
+  <version>0.0.1</version>
+</dependency>
+```
+
 ##### Maven Dependency SNAPSHOT
 
 ```xml
