@@ -13,10 +13,6 @@ import java.util.Map;
 public class ServeResponse extends BunnyBaseResponse {
 
     /**
-     * 服务类型
-     */
-    private String serveType;
-    /**
      * 服务响应
      */
     private Map<String, Object> internalResponse;

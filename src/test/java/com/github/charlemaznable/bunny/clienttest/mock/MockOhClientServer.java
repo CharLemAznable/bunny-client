@@ -115,10 +115,10 @@ public class MockOhClientServer {
             mockWebServer.start(22114);
 
             val calculateRequest = new CalculateRequest();
-            calculateRequest.setChargingType("calculate");
+            calculateRequest.setServeName("calculate");
             calculateRequest.setChargingParameters(of("key1", "value1"));
             val calculateResponse = bunnyOhClient.request(calculateRequest);
-            assertEquals(calculateRequest.getChargingType(), calculateResponse.getChargingType());
+            assertEquals(calculateRequest.getServeName(), calculateResponse.getServeName());
             assertTrue(calculateResponse.isSuccess());
             assertEquals(RESP_CODE_OK, calculateResponse.getRespCode());
             assertEquals(RESP_DESC_SUCCESS, calculateResponse.getRespDesc());
@@ -126,18 +126,18 @@ public class MockOhClientServer {
             assertEquals(UNIT_VALUE, calculateResponse.getUnit());
 
             val chargeRequest = new ChargeRequest();
-            chargeRequest.setChargingType("charge");
+            chargeRequest.setServeName("charge");
             chargeRequest.setChargeValue(CHARGE_VALUE);
             val chargeResponse = bunnyOhClient.request(chargeRequest);
-            assertEquals(chargeRequest.getChargingType(), chargeResponse.getChargingType());
+            assertEquals(chargeRequest.getServeName(), chargeResponse.getServeName());
             assertTrue(chargeResponse.isSuccess());
             assertEquals(RESP_CODE_OK, chargeResponse.getRespCode());
             assertEquals(RESP_DESC_SUCCESS, chargeResponse.getRespDesc());
 
             val queryRequest = new QueryRequest();
-            queryRequest.setChargingType("query");
+            queryRequest.setServeName("query");
             val queryResponse = bunnyOhClient.request(queryRequest);
-            assertEquals(queryRequest.getChargingType(), queryResponse.getChargingType());
+            assertEquals(queryRequest.getServeName(), queryResponse.getServeName());
             assertTrue(queryResponse.isSuccess());
             assertEquals(RESP_CODE_OK, queryResponse.getRespCode());
             assertEquals(RESP_DESC_SUCCESS, queryResponse.getRespDesc());
@@ -145,31 +145,27 @@ public class MockOhClientServer {
             assertEquals(UNIT_VALUE, queryResponse.getUnit());
 
             val serveRequest = new ServeRequest();
-            serveRequest.setChargingType("serve");
+            serveRequest.setServeName("serve");
             serveRequest.setPaymentValue(PAYMENT_VALUE);
-            serveRequest.setServeType(SERVE_TYPE);
             serveRequest.setInternalRequest(of(INTERNAL_KEY, INTERNAL_VALUE));
             serveRequest.setCallbackUrl(CALLBACK_URL);
             val serveResponse = bunnyOhClient.request(serveRequest);
-            assertEquals(serveRequest.getChargingType(), serveResponse.getChargingType());
+            assertEquals(serveRequest.getServeName(), serveResponse.getServeName());
             assertTrue(serveResponse.isSuccess());
             assertEquals(RESP_CODE_OK, serveResponse.getRespCode());
             assertEquals(RESP_DESC_SUCCESS, serveResponse.getRespDesc());
-            assertEquals(SERVE_TYPE, serveResponse.getServeType());
             assertEquals(INTERNAL_VALUE, serveResponse.getInternalResponse().get(INTERNAL_KEY));
             assertEquals(UNEXPECTED_FAILURE, serveResponse.getUnexpectedFailure());
 
             val serveCallbackRequest = new ServeCallbackRequest();
-            serveCallbackRequest.setChargingType("serve");
-            serveCallbackRequest.setServeType(SERVE_TYPE);
+            serveCallbackRequest.setServeName("serve");
             serveCallbackRequest.setInternalRequest(of(INTERNAL_KEY, INTERNAL_VALUE));
             serveCallbackRequest.setSeqId(SEQ_ID);
             val serveCallbackResponse = bunnyOhClient.request(serveCallbackRequest);
-            assertEquals(serveCallbackRequest.getChargingType(), serveCallbackResponse.getChargingType());
+            assertEquals(serveCallbackRequest.getServeName(), serveCallbackResponse.getServeName());
             assertTrue(serveCallbackResponse.isSuccess());
             assertEquals(RESP_CODE_OK, serveCallbackResponse.getRespCode());
             assertEquals(RESP_DESC_SUCCESS, serveCallbackResponse.getRespDesc());
-            assertEquals(SERVE_TYPE, serveCallbackResponse.getServeType());
             assertEquals(UNEXPECTED_FAILURE, serveCallbackResponse.getUnexpectedFailure());
         }
     }
@@ -188,7 +184,7 @@ public class MockOhClientServer {
             mockWebServer.start(22115);
 
             val calculateRequest = new CalculateRequest();
-            calculateRequest.setChargingType("error");
+            calculateRequest.setServeName("error");
             calculateRequest.setChargingParameters(new HashMap<>());
             val calculateResponse = bunnyOhClient.request(calculateRequest);
             assertFalse(calculateResponse.isSuccess());
@@ -205,7 +201,7 @@ public class MockOhClientServer {
                 public MockResponse dispatch(RecordedRequest request) {
                     if ("/exception/calculate".equals(request.getPath())) {
                         val resp = new CalculateResponse();
-                        resp.setChargingType("error");
+                        resp.setServeName("error");
                         resp.succeed();
                         resp.setCalculate(CALCULATE_VALUE);
                         resp.setUnit(UNIT_VALUE);
@@ -221,7 +217,7 @@ public class MockOhClientServer {
 
             try {
                 val calculateRequest = new CalculateRequest();
-                calculateRequest.setChargingType("error");
+                calculateRequest.setServeName("error");
                 calculateRequest.setChargingParameters(new HashMap<>());
                 bunnyOhClient.request(calculateRequest);
             } catch (BunnyOhClientException e) {
@@ -230,7 +226,7 @@ public class MockOhClientServer {
 
             try {
                 val chargeRequest = new ChargeRequest();
-                chargeRequest.setChargingType("error");
+                chargeRequest.setServeName("error");
                 chargeRequest.setChargeValue(CHARGE_VALUE);
                 bunnyOhClient.request(chargeRequest);
             } catch (StatusError e) {

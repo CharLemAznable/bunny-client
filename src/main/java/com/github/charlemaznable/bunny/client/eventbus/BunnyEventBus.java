@@ -4,6 +4,8 @@ import com.github.charlemaznable.bunny.client.config.BunnyClientConfig;
 import com.github.charlemaznable.bunny.client.domain.BunnyBaseRequest;
 import com.github.charlemaznable.bunny.client.domain.BunnyBaseResponse;
 import com.github.charlemaznable.core.codec.NonsenseSignature;
+import com.github.charlemaznable.core.codec.nonsense.NonsenseOptions;
+import com.github.charlemaznable.core.codec.signature.SignatureOptions;
 import com.google.inject.Inject;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
@@ -21,6 +23,7 @@ import static com.github.charlemaznable.core.codec.Json.json;
 import static com.github.charlemaznable.core.codec.Json.spec;
 import static com.github.charlemaznable.core.codec.Json.unJson;
 import static com.github.charlemaznable.core.lang.Condition.checkNotNull;
+import static com.github.charlemaznable.core.lang.Condition.notNullThen;
 import static com.github.charlemaznable.core.lang.Condition.nullThen;
 import static com.github.charlemaznable.core.miner.MinerFactory.getMiner;
 import static io.vertx.core.Future.failedFuture;
@@ -31,14 +34,20 @@ public final class BunnyEventBus {
 
     private final EventBus eventBus;
     private final BunnyClientConfig bunnyClientConfig;
-    private NonsenseSignature nonsenseSignature = new NonsenseSignature();
+    private final NonsenseSignature nonsenseSignature;
 
     @Inject
     @Autowired
-    public BunnyEventBus(Vertx vertx, @Nullable BunnyClientConfig bunnyClientConfig) {
+    public BunnyEventBus(Vertx vertx,
+                         @Nullable BunnyClientConfig bunnyClientConfig,
+                         @Nullable NonsenseOptions nonsenseOptions,
+                         @Nullable SignatureOptions signatureOptions) {
         this.eventBus = checkNotNull(vertx).eventBus();
         this.bunnyClientConfig = nullThen(bunnyClientConfig,
                 () -> getMiner(BunnyClientConfig.class));
+        this.nonsenseSignature = new NonsenseSignature();
+        notNullThen(nonsenseOptions, this.nonsenseSignature::nonsenseOptions);
+        notNullThen(signatureOptions, this.nonsenseSignature::signatureOptions);
     }
 
     public <T extends BunnyBaseResponse> void request

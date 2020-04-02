@@ -18,10 +18,10 @@ public abstract class BunnyBaseRequest<T extends BunnyBaseResponse> implements C
     @PathVar("bunny-address")
     protected String bunnyAddress;
     /**
-     * 计费类型, 如: 短信/流量
+     * 服务名称
      */
     @Setter
-    private String chargingType;
+    private String serveName;
     /**
      * 可选扩展参数
      */
@@ -29,7 +29,7 @@ public abstract class BunnyBaseRequest<T extends BunnyBaseResponse> implements C
 
     public T createResponse() {
         T response = onClass(responseClass()).create().get();
-        response.setChargingType(this.chargingType);
+        response.setServeName(this.serveName);
         return response;
     }
 }

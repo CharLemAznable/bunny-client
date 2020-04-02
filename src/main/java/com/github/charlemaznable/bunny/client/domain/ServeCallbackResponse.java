@@ -11,10 +11,6 @@ import lombok.Setter;
 public class ServeCallbackResponse extends BunnyBaseResponse {
 
     /**
-     * 服务类型
-     */
-    private String serveType;
-    /**
      * 非期望的内部异常信息
      */
     private String unexpectedFailure;

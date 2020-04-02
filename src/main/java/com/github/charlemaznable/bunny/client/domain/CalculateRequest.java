@@ -13,7 +13,7 @@ import java.util.Map;
 public class CalculateRequest extends BunnyBaseRequest<CalculateResponse> {
 
     /**
-     * 计费参数, 依据计费类型选择计费插件, 由插件解析
+     * 计费参数, 依据服务类型选择计费插件, 由插件解析
      */
     private Map<String, Object> chargingParameters;
 

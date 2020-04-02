@@ -2,7 +2,6 @@ package com.github.charlemaznable.bunny.client.domain;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.val;
 
 import java.util.Map;
 
@@ -19,10 +18,6 @@ public class ServeRequest extends BunnyBaseRequest<ServeResponse> {
      */
     private Integer paymentValue;
     /**
-     * 服务类型
-     */
-    private String serveType;
-    /**
      * 服务请求
      */
     private Map<String, Object> internalRequest;
@@ -38,12 +33,5 @@ public class ServeRequest extends BunnyBaseRequest<ServeResponse> {
     @Override
     public Class<? extends ServeResponse> responseClass() {
         return ServeResponse.class;
-    }
-
-    @Override
-    public ServeResponse createResponse() {
-        val serveResponse = super.createResponse();
-        serveResponse.setServeType(this.serveType);
-        return serveResponse;
     }
 }
