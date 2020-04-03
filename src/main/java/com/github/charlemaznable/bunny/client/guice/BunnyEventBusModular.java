@@ -1,35 +1,23 @@
 package com.github.charlemaznable.bunny.client.guice;
 
 import com.github.charlemaznable.bunny.client.config.BunnyClientConfig;
-import com.github.charlemaznable.core.miner.MinerModular;
-import com.google.inject.AbstractModule;
 import com.google.inject.Module;
-import com.google.inject.util.Providers;
-import lombok.AllArgsConstructor;
 
-@AllArgsConstructor
-public final class BunnyEventBusModular {
-
-    private Module configModule;
+public final class BunnyEventBusModular extends AbstractBunnyModular<BunnyEventBusModular> {
 
     public BunnyEventBusModular() {
-        this((BunnyClientConfig) null);
+        super();
     }
 
     public BunnyEventBusModular(Class<? extends BunnyClientConfig> configClass) {
-        this(new MinerModular().bindClasses(configClass).createModule());
+        super(configClass);
     }
 
     public BunnyEventBusModular(BunnyClientConfig configImpl) {
-        this(new AbstractModule() {
-            @Override
-            protected void configure() {
-                bind(BunnyClientConfig.class).toProvider(Providers.of(configImpl));
-            }
-        });
+        super(configImpl);
     }
 
-    public Module createModule() {
-        return configModule;
+    public BunnyEventBusModular(Module configModule) {
+        super(configModule);
     }
 }
