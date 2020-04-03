@@ -56,7 +56,6 @@ public class MockEventBusConsumer {
             val calculateResponse = calculateRequest.createResponse();
             calculateResponse.succeed();
             calculateResponse.setCalculate(CALCULATE_VALUE);
-            calculateResponse.setUnit(UNIT_VALUE);
             message.reply(json(nonsenseSignature.sign(calculateResponse)));
         });
         eventBus.<String>consumer("/bunny/charge", message -> {
@@ -111,7 +110,6 @@ public class MockEventBusConsumer {
                         assertEquals(RESP_CODE_OK, calculateResponse.getRespCode());
                         assertEquals(RESP_DESC_SUCCESS, calculateResponse.getRespDesc());
                         assertEquals(CALCULATE_VALUE, calculateResponse.getCalculate());
-                        assertEquals(UNIT_VALUE, calculateResponse.getUnit());
                         f.complete();
                     }));
                 }),
@@ -208,7 +206,6 @@ public class MockEventBusConsumer {
             resp.setServeName("error");
             resp.succeed();
             resp.setCalculate(CALCULATE_VALUE);
-            resp.setUnit(UNIT_VALUE);
             message.reply(json(resp));
         });
 

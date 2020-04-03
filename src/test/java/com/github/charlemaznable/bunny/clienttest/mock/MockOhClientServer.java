@@ -62,7 +62,6 @@ public class MockOhClientServer {
                             val calculateResponse = calculateRequest.createResponse();
                             calculateResponse.succeed();
                             calculateResponse.setCalculate(CALCULATE_VALUE);
-                            calculateResponse.setUnit(UNIT_VALUE);
                             return new MockResponse().setBody(json(
                                     nonsenseSignature.sign(calculateResponse)));
 
@@ -123,7 +122,6 @@ public class MockOhClientServer {
             assertEquals(RESP_CODE_OK, calculateResponse.getRespCode());
             assertEquals(RESP_DESC_SUCCESS, calculateResponse.getRespDesc());
             assertEquals(CALCULATE_VALUE, calculateResponse.getCalculate());
-            assertEquals(UNIT_VALUE, calculateResponse.getUnit());
 
             val chargeRequest = new ChargeRequest();
             chargeRequest.setServeName("charge");
@@ -204,7 +202,6 @@ public class MockOhClientServer {
                         resp.setServeName("error");
                         resp.succeed();
                         resp.setCalculate(CALCULATE_VALUE);
-                        resp.setUnit(UNIT_VALUE);
                         return new MockResponse().setBody(json(resp));
                     } else {
                         return new MockResponse()
