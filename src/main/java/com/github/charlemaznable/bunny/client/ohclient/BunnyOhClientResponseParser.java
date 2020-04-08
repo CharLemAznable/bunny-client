@@ -24,6 +24,10 @@ public final class BunnyOhClientResponseParser implements ResponseParser {
 
     private final NonsenseSignature nonsenseSignature;
 
+    public BunnyOhClientResponseParser() {
+        this(null, null);
+    }
+
     @Inject
     @Autowired
     public BunnyOhClientResponseParser(@Nullable NonsenseOptions nonsenseOptions,
