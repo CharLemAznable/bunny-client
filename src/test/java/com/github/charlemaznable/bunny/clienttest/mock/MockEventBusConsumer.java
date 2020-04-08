@@ -172,7 +172,7 @@ public class MockEventBusConsumer {
                         f.complete();
                     }));
                 })
-        )).setHandler(result -> test.<CompositeFuture>completing().handle(result));
+        )).onComplete(result -> test.<CompositeFuture>completing().handle(result));
     }
 
     public static void testErrorConsumer(Vertx vertx, BunnyEventBus bunnyEventBus, VertxTestContext test) {
@@ -196,7 +196,7 @@ public class MockEventBusConsumer {
                         f.complete();
                     }));
                 })
-        )).setHandler(result -> test.<CompositeFuture>completing().handle(result));
+        )).onComplete(result -> test.<CompositeFuture>completing().handle(result));
     }
 
     public static void testExceptionConsumer(Vertx vertx, BunnyEventBus bunnyEventBus, VertxTestContext test) {
@@ -234,7 +234,7 @@ public class MockEventBusConsumer {
                         f.complete();
                     }));
                 })
-        )).setHandler(result -> test.<CompositeFuture>completing().handle(result));
+        )).onComplete(result -> test.<CompositeFuture>completing().handle(result));
     }
 
     private static Map<String, Object> verifyRequestMap(Message<String> message) {
