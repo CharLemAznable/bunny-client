@@ -19,10 +19,6 @@ public final class BunnyOhClientContentFormatter extends JsonContentFormatter {
 
     private final NonsenseSignature nonsenseSignature;
 
-    public BunnyOhClientContentFormatter() {
-        this(null, null);
-    }
-
     @Inject
     @Autowired
     public BunnyOhClientContentFormatter(@Nullable NonsenseOptions nonsenseOptions,
