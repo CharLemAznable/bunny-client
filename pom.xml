@@ -7,11 +7,11 @@
     <parent>
         <groupId>com.github.charlemaznable</groupId>
         <artifactId>complex-dependencies</artifactId>
-        <version>0.4.4-SNAPSHOT</version>
+        <version>0.4.5-SNAPSHOT</version>
     </parent>
 
     <artifactId>bunny-client</artifactId>
-    <version>0.0.3-SNAPSHOT</version>
+    <version>0.0.4-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>Bunny Client</name>
@@ -23,5 +23,13 @@
         <developerConnection>scm:git:https://github.com/CharLemAznable/bunny-client.git</developerConnection>
         <url>https://github.com/CharLemAznable/bunny-client</url>
     </scm>
+
+    <dependencies>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 
 </project>
