@@ -9,6 +9,7 @@ import com.github.charlemaznable.bunny.client.domain.ServeRequest;
 import com.github.charlemaznable.bunny.client.ohclient.BunnyOhClient;
 import com.github.charlemaznable.bunny.client.ohclient.BunnyOhClientException;
 import com.github.charlemaznable.core.codec.NonsenseSignature;
+import com.github.charlemaznable.core.lang.EverythingIsNonNull;
 import com.github.charlemaznable.core.net.common.StatusError;
 import lombok.SneakyThrows;
 import lombok.val;
@@ -25,6 +26,7 @@ import static com.github.charlemaznable.bunny.client.domain.BunnyBaseResponse.RE
 import static com.github.charlemaznable.core.codec.Json.json;
 import static com.github.charlemaznable.core.codec.Json.spec;
 import static com.github.charlemaznable.core.codec.Json.unJson;
+import static com.github.charlemaznable.core.lang.Condition.checkNotNull;
 import static com.github.charlemaznable.core.lang.Mapp.of;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -45,6 +47,7 @@ public class MockOhClientServer {
     private static final String SEQ_ID = "seq-id";
     private static final NonsenseSignature nonsenseSignature = new NonsenseSignature();
 
+    @EverythingIsNonNull
     @SneakyThrows
     public static void testDefaultServer(BunnyOhClient bunnyOhClient) {
         try (val mockWebServer = new MockWebServer()) {
@@ -55,7 +58,7 @@ public class MockOhClientServer {
                     val requestMap = unJson(requestBody);
                     assertTrue(nonsenseSignature.verify(requestMap));
 
-                    switch (request.getPath()) {
+                    switch (checkNotNull(request.getPath())) {
                         case "/bunny/calculate":
                             val calculateRequest = spec(requestMap, CalculateRequest.class);
                             assertEquals("value1", calculateRequest.getChargingParameters().get("key1"));
@@ -168,6 +171,7 @@ public class MockOhClientServer {
         }
     }
 
+    @EverythingIsNonNull
     @SneakyThrows
     public static void testErrorServer(BunnyOhClient bunnyOhClient) {
         try (val mockWebServer = new MockWebServer()) {
@@ -191,6 +195,7 @@ public class MockOhClientServer {
         }
     }
 
+    @EverythingIsNonNull
     @SneakyThrows
     public static void testExceptionServer(BunnyOhClient bunnyOhClient) {
         try (val mockWebServer = new MockWebServer()) {
