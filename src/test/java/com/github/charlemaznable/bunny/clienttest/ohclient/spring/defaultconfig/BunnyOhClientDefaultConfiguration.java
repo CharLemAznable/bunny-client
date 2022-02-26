@@ -4,8 +4,8 @@ import com.github.charlemaznable.bunny.client.spring.BunnyOhClientImport;
 
 import javax.annotation.PostConstruct;
 
-import static com.github.charlemaznable.core.miner.MinerFactory.springMinerLoader;
-import static com.github.charlemaznable.core.net.ohclient.OhFactory.springOhLoader;
+import static com.github.charlemaznable.httpclient.ohclient.OhFactory.springOhLoader;
+import static com.github.charlemaznable.miner.MinerFactory.springMinerLoader;
 import static org.joor.Reflect.on;
 
 @BunnyOhClientImport

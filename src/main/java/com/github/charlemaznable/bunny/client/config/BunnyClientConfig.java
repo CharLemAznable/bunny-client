@@ -1,6 +1,6 @@
 package com.github.charlemaznable.bunny.client.config;
 
-import com.github.charlemaznable.core.miner.MinerConfig;
+import com.github.charlemaznable.miner.MinerConfig;
 
 @MinerConfig(group = "BunnyClient", dataId = "default")
 public interface BunnyClientConfig {

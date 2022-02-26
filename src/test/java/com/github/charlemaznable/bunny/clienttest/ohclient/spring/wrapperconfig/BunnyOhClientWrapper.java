@@ -3,7 +3,7 @@ package com.github.charlemaznable.bunny.clienttest.ohclient.spring.wrapperconfig
 import com.github.charlemaznable.bunny.client.domain.BunnyBaseRequest;
 import com.github.charlemaznable.bunny.client.domain.BunnyBaseResponse;
 import com.github.charlemaznable.bunny.client.ohclient.BunnyOhClient;
-import com.github.charlemaznable.core.net.common.Bundle;
+import com.github.charlemaznable.httpclient.common.Bundle;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Nullable;
 
 import static com.github.charlemaznable.core.lang.Condition.nullThen;
-import static com.github.charlemaznable.core.net.ohclient.OhFactory.getClient;
+import static com.github.charlemaznable.httpclient.ohclient.OhFactory.getClient;
 
 @Component
 public class BunnyOhClientWrapper {

@@ -1,6 +1,6 @@
 package com.github.charlemaznable.bunny.client.domain;
 
-import com.github.charlemaznable.core.net.common.CncResponse;
+import com.github.charlemaznable.httpclient.common.CncResponse;
 import lombok.Getter;
 import lombok.Setter;
 

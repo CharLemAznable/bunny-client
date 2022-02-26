@@ -2,14 +2,14 @@ package com.github.charlemaznable.bunny.clienttest.ohclient.spring.exceptionconf
 
 import com.github.charlemaznable.bunny.client.spring.BunnyOhClientImport;
 import com.github.charlemaznable.bunny.clienttest.mock.BunnyClientExceptionConfig;
-import com.github.charlemaznable.core.miner.MinerScan;
+import com.github.charlemaznable.miner.MinerScan;
 import org.n3r.diamond.client.impl.MockDiamondServer;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
-import static com.github.charlemaznable.core.miner.MinerFactory.springMinerLoader;
-import static com.github.charlemaznable.core.net.ohclient.OhFactory.springOhLoader;
+import static com.github.charlemaznable.httpclient.ohclient.OhFactory.springOhLoader;
+import static com.github.charlemaznable.miner.MinerFactory.springMinerLoader;
 import static org.joor.Reflect.on;
 
 @MinerScan(basePackageClasses = BunnyClientExceptionConfig.class)

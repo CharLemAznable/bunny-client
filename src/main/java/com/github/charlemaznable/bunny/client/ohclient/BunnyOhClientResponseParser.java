@@ -3,7 +3,7 @@ package com.github.charlemaznable.bunny.client.ohclient;
 import com.github.charlemaznable.core.codec.NonsenseSignature;
 import com.github.charlemaznable.core.codec.nonsense.NonsenseOptions;
 import com.github.charlemaznable.core.codec.signature.SignatureOptions;
-import com.github.charlemaznable.core.net.common.ResponseParse.ResponseParser;
+import com.github.charlemaznable.httpclient.common.ResponseParse.ResponseParser;
 import com.google.inject.Inject;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,8 +1,8 @@
 package com.github.charlemaznable.bunny.client.domain;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import com.github.charlemaznable.core.net.common.CncRequest;
-import com.github.charlemaznable.core.net.common.PathVar;
+import com.github.charlemaznable.httpclient.common.CncRequest;
+import com.github.charlemaznable.httpclient.common.PathVar;
 import lombok.Getter;
 import lombok.Setter;
 

@@ -2,7 +2,7 @@ package com.github.charlemaznable.bunny.client.guice;
 
 import com.github.charlemaznable.bunny.client.config.BunnyClientConfig;
 import com.github.charlemaznable.bunny.client.ohclient.BunnyOhClient;
-import com.github.charlemaznable.core.net.ohclient.OhModular;
+import com.github.charlemaznable.httpclient.ohclient.OhModular;
 import com.google.inject.Module;
 
 public final class BunnyOhClientModular extends AbstractBunnyModular<BunnyOhClientModular> {

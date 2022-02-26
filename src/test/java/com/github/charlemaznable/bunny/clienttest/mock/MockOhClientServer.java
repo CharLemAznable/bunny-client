@@ -9,7 +9,7 @@ import com.github.charlemaznable.bunny.client.domain.ServeRequest;
 import com.github.charlemaznable.bunny.client.ohclient.BunnyOhClient;
 import com.github.charlemaznable.bunny.client.ohclient.BunnyOhClientException;
 import com.github.charlemaznable.core.codec.NonsenseSignature;
-import com.github.charlemaznable.core.net.common.StatusError;
+import com.github.charlemaznable.httpclient.common.StatusError;
 import lombok.SneakyThrows;
 import lombok.val;
 import okhttp3.mockwebserver.Dispatcher;

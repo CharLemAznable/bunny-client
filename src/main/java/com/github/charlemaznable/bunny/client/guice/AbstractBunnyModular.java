@@ -4,7 +4,7 @@ import com.github.charlemaznable.bunny.client.config.BunnyClientConfig;
 import com.github.charlemaznable.core.codec.nonsense.NonsenseOptions;
 import com.github.charlemaznable.core.codec.signature.SignatureOptions;
 import com.github.charlemaznable.core.guice.Modulee;
-import com.github.charlemaznable.core.miner.MinerModular;
+import com.github.charlemaznable.miner.MinerModular;
 import com.google.inject.AbstractModule;
 import com.google.inject.Module;
 import com.google.inject.util.Providers;
