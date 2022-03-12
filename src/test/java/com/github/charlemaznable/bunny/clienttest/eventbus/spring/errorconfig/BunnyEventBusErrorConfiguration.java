@@ -9,9 +9,10 @@ import org.springframework.context.annotation.Configuration;
 
 import javax.annotation.PostConstruct;
 
+import static com.github.charlemaznable.configservice.diamond.DiamondFactory.diamondLoader;
+import static com.github.charlemaznable.core.spring.SpringFactory.springFactory;
 import static com.github.charlemaznable.httpclient.ohclient.OhFactory.springOhLoader;
-import static com.github.charlemaznable.miner.MinerFactory.springMinerLoader;
-import static org.n3r.eql.joor.Reflect.on;
+import static org.joor.Reflect.on;
 
 @Configuration
 @VertxImport
@@ -20,7 +21,7 @@ public class BunnyEventBusErrorConfiguration {
 
     @PostConstruct
     public void postConstruct() {
-        on(springMinerLoader()).field("minerCache").call("invalidateAll");
+        on(diamondLoader(springFactory())).field("configCache").call("invalidateAll");
         on(springOhLoader()).field("ohCache").call("invalidateAll");
     }
 

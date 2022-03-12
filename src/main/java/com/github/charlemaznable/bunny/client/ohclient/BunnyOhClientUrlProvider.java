@@ -8,9 +8,9 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Nullable;
 
+import static com.github.charlemaznable.configservice.ConfigFactory.getConfig;
 import static com.github.charlemaznable.core.lang.Condition.checkNotNull;
 import static com.github.charlemaznable.core.lang.Condition.nullThen;
-import static com.github.charlemaznable.miner.MinerFactory.getMiner;
 
 @Component
 public final class BunnyOhClientUrlProvider implements UrlProvider {
@@ -21,7 +21,7 @@ public final class BunnyOhClientUrlProvider implements UrlProvider {
     @Autowired
     public BunnyOhClientUrlProvider(@Nullable BunnyClientConfig bunnyClientConfig) {
         this.bunnyClientConfig = nullThen(bunnyClientConfig,
-                () -> getMiner(BunnyClientConfig.class));
+                () -> getConfig(BunnyClientConfig.class));
     }
 
     @Override

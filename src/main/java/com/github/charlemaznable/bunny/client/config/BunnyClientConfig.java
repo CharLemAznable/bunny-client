@@ -1,13 +1,15 @@
 package com.github.charlemaznable.bunny.client.config;
 
-import com.github.charlemaznable.miner.MinerConfig;
+import com.github.charlemaznable.configservice.apollo.ApolloConfig;
+import com.github.charlemaznable.configservice.diamond.DiamondConfig;
 
-@MinerConfig(group = "BunnyClient", dataId = "default")
+@ApolloConfig(namespace = "BunnyClient", propertyName = "${bunny-client-config:-default}")
+@DiamondConfig(group = "BunnyClient", dataId = "${bunny-client-config:-default}")
 public interface BunnyClientConfig {
 
-    @MinerConfig(defaultValue = "http://127.0.0.1:22114/bunny")
+    @DiamondConfig(defaultValue = "http://127.0.0.1:22114/bunny")
     String httpServerBaseUrl();
 
-    @MinerConfig(defaultValue = "/bunny")
+    @DiamondConfig(defaultValue = "/bunny")
     String eventBusAddressPrefix();
 }

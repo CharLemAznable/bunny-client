@@ -1,8 +1,8 @@
 package com.github.charlemaznable.bunny.clienttest.mock;
 
 import com.github.charlemaznable.bunny.client.config.BunnyClientConfig;
-import com.github.charlemaznable.miner.MinerConfig;
+import com.github.charlemaznable.configservice.diamond.DiamondConfig;
 
-@MinerConfig(group = "BunnyClient", dataId = "exception")
+@DiamondConfig(group = "BunnyClient", dataId = "exception")
 public interface BunnyClientExceptionConfig extends BunnyClientConfig {
 }

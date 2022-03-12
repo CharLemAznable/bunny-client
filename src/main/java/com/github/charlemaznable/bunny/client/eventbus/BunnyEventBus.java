@@ -19,13 +19,13 @@ import javax.annotation.Nullable;
 
 import static com.github.charlemaznable.bunny.client.domain.BunnyBaseResponse.RESP_CODE_KEY;
 import static com.github.charlemaznable.bunny.client.domain.BunnyBaseResponse.RESP_CODE_OK;
+import static com.github.charlemaznable.configservice.ConfigFactory.getConfig;
 import static com.github.charlemaznable.core.codec.Json.json;
 import static com.github.charlemaznable.core.codec.Json.spec;
 import static com.github.charlemaznable.core.codec.Json.unJson;
 import static com.github.charlemaznable.core.lang.Condition.checkNotNull;
 import static com.github.charlemaznable.core.lang.Condition.notNullThen;
 import static com.github.charlemaznable.core.lang.Condition.nullThen;
-import static com.github.charlemaznable.miner.MinerFactory.getMiner;
 import static io.vertx.core.Future.failedFuture;
 import static io.vertx.core.Future.succeededFuture;
 
@@ -44,7 +44,7 @@ public final class BunnyEventBus {
                          @Nullable SignatureOptions signatureOptions) {
         this.eventBus = checkNotNull(vertx).eventBus();
         this.bunnyClientConfig = nullThen(bunnyClientConfig,
-                () -> getMiner(BunnyClientConfig.class));
+                () -> getConfig(BunnyClientConfig.class));
         this.nonsenseSignature = new NonsenseSignature();
         notNullThen(nonsenseOptions, this.nonsenseSignature::nonsenseOptions);
         notNullThen(signatureOptions, this.nonsenseSignature::signatureOptions);
