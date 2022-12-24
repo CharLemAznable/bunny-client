@@ -8,7 +8,6 @@ import com.github.charlemaznable.core.codec.signature.SignatureOptions;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.util.Providers;
-import lombok.var;
 import org.junit.jupiter.api.Test;
 
 import static com.github.charlemaznable.bunny.clienttest.mock.MockOhClientServer.testDefaultServer;

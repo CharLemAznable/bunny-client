@@ -14,6 +14,7 @@ import javax.annotation.Nullable;
 import static com.github.charlemaznable.core.lang.Condition.nullThen;
 import static com.github.charlemaznable.httpclient.ohclient.OhFactory.getClient;
 
+@SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 @Component
 public class BunnyOhClientWrapper {
 

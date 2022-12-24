@@ -18,6 +18,7 @@ import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
 import org.springframework.http.HttpStatus;
 
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 
 import static com.github.charlemaznable.bunny.client.domain.BunnyBaseResponse.RESP_CODE_OK;
@@ -26,6 +27,7 @@ import static com.github.charlemaznable.core.codec.Json.json;
 import static com.github.charlemaznable.core.codec.Json.spec;
 import static com.github.charlemaznable.core.codec.Json.unJson;
 import static com.github.charlemaznable.core.lang.Mapp.of;
+import static java.util.Objects.requireNonNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -49,13 +51,14 @@ public class MockOhClientServer {
     public static void testDefaultServer(BunnyOhClient bunnyOhClient) {
         try (val mockWebServer = new MockWebServer()) {
             mockWebServer.setDispatcher(new Dispatcher() {
+                @Nonnull
                 @Override
-                public MockResponse dispatch(RecordedRequest request) {
+                public MockResponse dispatch(@Nonnull RecordedRequest request) {
                     val requestBody = request.getBody().readUtf8();
                     val requestMap = unJson(requestBody);
                     assertTrue(nonsenseSignature.verify(requestMap));
 
-                    switch (request.getPath()) {
+                    switch (requireNonNull(request.getPath())) {
                         case "/bunny/calculate":
                             val calculateRequest = spec(requestMap, CalculateRequest.class);
                             assertEquals("value1", calculateRequest.getChargingParameters().get("key1"));
@@ -172,8 +175,9 @@ public class MockOhClientServer {
     public static void testErrorServer(BunnyOhClient bunnyOhClient) {
         try (val mockWebServer = new MockWebServer()) {
             mockWebServer.setDispatcher(new Dispatcher() {
+                @Nonnull
                 @Override
-                public MockResponse dispatch(RecordedRequest request) {
+                public MockResponse dispatch(@Nonnull RecordedRequest request) {
                     val resp = new CalculateResponse();
                     resp.failed("ERROR", "FAILURE");
                     return new MockResponse().setBody(json(resp));
@@ -195,8 +199,9 @@ public class MockOhClientServer {
     public static void testExceptionServer(BunnyOhClient bunnyOhClient) {
         try (val mockWebServer = new MockWebServer()) {
             mockWebServer.setDispatcher(new Dispatcher() {
+                @Nonnull
                 @Override
-                public MockResponse dispatch(RecordedRequest request) {
+                public MockResponse dispatch(@Nonnull RecordedRequest request) {
                     if ("/exception/calculate".equals(request.getPath())) {
                         val resp = new CalculateResponse();
                         resp.setServeName("error");

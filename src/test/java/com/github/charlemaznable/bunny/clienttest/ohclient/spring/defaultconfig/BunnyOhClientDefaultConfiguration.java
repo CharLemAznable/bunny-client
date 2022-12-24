@@ -1,8 +1,7 @@
 package com.github.charlemaznable.bunny.clienttest.ohclient.spring.defaultconfig;
 
 import com.github.charlemaznable.bunny.client.spring.BunnyOhClientImport;
-
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 
 import static com.github.charlemaznable.configservice.diamond.DiamondFactory.diamondLoader;
 import static com.github.charlemaznable.core.spring.SpringFactory.springFactory;

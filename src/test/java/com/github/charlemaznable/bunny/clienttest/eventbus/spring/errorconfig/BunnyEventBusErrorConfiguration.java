@@ -4,10 +4,9 @@ import com.github.charlemaznable.bunny.client.config.BunnyClientConfig;
 import com.github.charlemaznable.bunny.client.spring.BunnyEventBusImport;
 import com.github.charlemaznable.bunny.clienttest.mock.BunnyClientErrorConfig;
 import com.github.charlemaznable.core.vertx.spring.VertxImport;
+import jakarta.annotation.PostConstruct;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import javax.annotation.PostConstruct;
 
 import static com.github.charlemaznable.configservice.diamond.DiamondFactory.diamondLoader;
 import static com.github.charlemaznable.core.spring.SpringFactory.springFactory;

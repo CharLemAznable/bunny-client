@@ -2,8 +2,7 @@ package com.github.charlemaznable.bunny.clienttest.eventbus.spring.defaultconfig
 
 import com.github.charlemaznable.bunny.client.spring.BunnyEventBusImport;
 import com.github.charlemaznable.core.vertx.spring.VertxImport;
-
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 
 import static com.github.charlemaznable.configservice.diamond.DiamondFactory.diamondLoader;
 import static com.github.charlemaznable.core.spring.SpringFactory.springFactory;

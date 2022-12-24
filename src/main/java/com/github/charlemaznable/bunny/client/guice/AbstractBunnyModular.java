@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 
 @SuppressWarnings("unchecked")
 @RequiredArgsConstructor
-public abstract class AbstractBunnyModular<T extends AbstractBunnyModular> {
+public abstract class AbstractBunnyModular<T extends AbstractBunnyModular<T>> {
 
     private final Module configModule;
     private NonsenseOptions nonsenseOptions;

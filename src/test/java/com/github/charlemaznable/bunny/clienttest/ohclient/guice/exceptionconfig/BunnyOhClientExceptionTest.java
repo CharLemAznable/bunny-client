@@ -15,9 +15,10 @@ public class BunnyOhClientExceptionTest {
     @BeforeAll
     public static void beforeAll() {
         MockDiamondServer.setUpMockServer();
-        MockDiamondServer.setConfigInfo("BunnyClient", "exception",
-                "httpServerBaseUrl=http://127.0.0.1:22116/exception\n" +
-                        "eventBusAddressPrefix=/exception\n");
+        MockDiamondServer.setConfigInfo("BunnyClient", "exception", """
+                httpServerBaseUrl=http://127.0.0.1:22116/exception
+                eventBusAddressPrefix=/exception
+                """);
     }
 
     @AfterAll
