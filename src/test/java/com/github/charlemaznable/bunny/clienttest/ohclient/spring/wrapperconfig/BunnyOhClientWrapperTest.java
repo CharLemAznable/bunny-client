@@ -8,7 +8,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static com.github.charlemaznable.bunny.clienttest.mock.MockOhClientServer.testDefaultServer;
 
-@SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = BunnyOhClientWrapperConfiguration.class)
 public class BunnyOhClientWrapperTest {

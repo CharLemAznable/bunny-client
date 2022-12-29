@@ -25,7 +25,7 @@ public abstract class BunnyBaseRequest<T extends BunnyBaseResponse> implements C
     /**
      * 可选扩展参数
      */
-    private Map<String, Object> context = newHashMap();
+    private final Map<String, Object> context = newHashMap();
 
     public T createResponse() {
         T response = onClass(responseClass()).create().get();

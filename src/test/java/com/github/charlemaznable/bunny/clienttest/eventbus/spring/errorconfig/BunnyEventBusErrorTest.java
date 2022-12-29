@@ -12,7 +12,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static com.github.charlemaznable.bunny.clienttest.mock.MockEventBusConsumer.testErrorConsumer;
 
-@SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 @ExtendWith({SpringExtension.class, VertxExtension.class})
 @ContextConfiguration(classes = BunnyEventBusErrorConfiguration.class)
 public class BunnyEventBusErrorTest {
