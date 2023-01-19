@@ -8,12 +8,13 @@ import com.github.charlemaznable.core.guice.Modulee;
 import com.google.inject.AbstractModule;
 import com.google.inject.Module;
 import com.google.inject.Provides;
+import com.google.inject.util.Modules;
 import com.google.inject.util.Providers;
 import io.vertx.core.Vertx;
 
 import javax.annotation.Nullable;
 
-import static com.github.charlemaznable.core.lang.Condition.checkNotNull;
+import static com.github.charlemaznable.core.lang.Condition.nullThen;
 
 public final class BunnyEventBusModular extends AbstractBunnyModular<BunnyEventBusModular> {
 
@@ -50,7 +51,7 @@ public final class BunnyEventBusModular extends AbstractBunnyModular<BunnyEventB
     }
 
     public Module createModule() {
-        return Modulee.combine(this.configModule, checkNotNull(vertxModule),
+        return Modulee.combine(this.configModule, nullThen(vertxModule, () -> Modules.EMPTY_MODULE),
                 new AbstractModule() {
                     @Provides
                     public BunnyEventBus bunnyEventBus(Vertx vertx,
