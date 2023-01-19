@@ -11,7 +11,6 @@ import com.google.inject.util.Providers;
 import io.vertx.core.Vertx;
 import io.vertx.junit5.VertxExtension;
 import io.vertx.junit5.VertxTestContext;
-import lombok.val;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -22,14 +21,8 @@ public class BunnyEventBusDefaultTest {
 
     @Test
     public void testBunnyEventBus(Vertx vertx, VertxTestContext test) {
-        val vertxModule = new AbstractModule() {
-            @Override
-            protected void configure() {
-                bind(Vertx.class).toProvider(Providers.of(vertx));
-            }
-        };
-        var eventBusModular = new BunnyEventBusModular();
-        var injector = Guice.createInjector(eventBusModular.createModule(), vertxModule);
+        var eventBusModular = new BunnyEventBusModular().vertx(vertx);
+        var injector = Guice.createInjector(eventBusModular.createModule());
         var bunnyEventBus = injector.getInstance(BunnyEventBus.class);
         testDefaultConsumer(vertx, bunnyEventBus, test);
 
@@ -38,8 +31,8 @@ public class BunnyEventBusDefaultTest {
             protected void configure() {
                 bind(BunnyClientConfig.class).toProvider(Providers.of(null));
             }
-        }).nonsenseOptions(new NonsenseOptions()).signatureOptions(new SignatureOptions());
-        injector = Guice.createInjector(eventBusModular.createModule(), vertxModule);
+        }).nonsenseOptions(new NonsenseOptions()).signatureOptions(new SignatureOptions()).vertx(vertx);
+        injector = Guice.createInjector(eventBusModular.createModule());
         bunnyEventBus = injector.getInstance(BunnyEventBus.class);
         testDefaultConsumer(vertx, bunnyEventBus, test);
     }

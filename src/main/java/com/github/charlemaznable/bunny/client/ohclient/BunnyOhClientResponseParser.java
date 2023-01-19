@@ -4,10 +4,7 @@ import com.github.charlemaznable.core.codec.NonsenseSignature;
 import com.github.charlemaznable.core.codec.nonsense.NonsenseOptions;
 import com.github.charlemaznable.core.codec.signature.SignatureOptions;
 import com.github.charlemaznable.httpclient.common.ResponseParse.ResponseParser;
-import com.google.inject.Inject;
 import lombok.val;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -19,13 +16,10 @@ import static com.github.charlemaznable.core.codec.Json.spec;
 import static com.github.charlemaznable.core.codec.Json.unJson;
 import static com.github.charlemaznable.core.lang.Condition.notNullThen;
 
-@Component
 public final class BunnyOhClientResponseParser implements ResponseParser {
 
     private final NonsenseSignature nonsenseSignature;
 
-    @Inject
-    @Autowired
     public BunnyOhClientResponseParser(@Nullable NonsenseOptions nonsenseOptions,
                                        @Nullable SignatureOptions signatureOptions) {
         this.nonsenseSignature = new NonsenseSignature();

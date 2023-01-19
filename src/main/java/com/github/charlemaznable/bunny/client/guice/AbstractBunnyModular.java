@@ -8,13 +8,11 @@ import com.github.charlemaznable.core.guice.Modulee;
 import com.google.inject.AbstractModule;
 import com.google.inject.Module;
 import com.google.inject.util.Providers;
-import lombok.RequiredArgsConstructor;
 
 @SuppressWarnings("unchecked")
-@RequiredArgsConstructor
 public abstract class AbstractBunnyModular<T extends AbstractBunnyModular<T>> {
 
-    private final Module configModule;
+    protected final Module configModule;
     private NonsenseOptions nonsenseOptions;
     private SignatureOptions signatureOptions;
 
@@ -35,6 +33,16 @@ public abstract class AbstractBunnyModular<T extends AbstractBunnyModular<T>> {
         });
     }
 
+    public AbstractBunnyModular(Module configModule) {
+        this.configModule = Modulee.combine(configModule, new AbstractModule() {
+            @Override
+            protected void configure() {
+                bind(NonsenseOptions.class).toProvider(Providers.of(nonsenseOptions));
+                bind(SignatureOptions.class).toProvider(Providers.of(signatureOptions));
+            }
+        });
+    }
+
     public T nonsenseOptions(NonsenseOptions nonsenseOptions) {
         this.nonsenseOptions = nonsenseOptions;
         return (T) this;
@@ -43,15 +51,5 @@ public abstract class AbstractBunnyModular<T extends AbstractBunnyModular<T>> {
     public T signatureOptions(SignatureOptions signatureOptions) {
         this.signatureOptions = signatureOptions;
         return (T) this;
-    }
-
-    public Module createModule() {
-        return Modulee.override(new AbstractModule() {
-            @Override
-            protected void configure() {
-                bind(NonsenseOptions.class).toProvider(Providers.of(nonsenseOptions));
-                bind(SignatureOptions.class).toProvider(Providers.of(signatureOptions));
-            }
-        }, configModule);
     }
 }
