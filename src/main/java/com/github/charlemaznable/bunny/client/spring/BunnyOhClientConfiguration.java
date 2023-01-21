@@ -8,23 +8,15 @@ import com.github.charlemaznable.bunny.client.ohclient.BunnyOhClientUrlProvider;
 import com.github.charlemaznable.core.codec.nonsense.NonsenseOptions;
 import com.github.charlemaznable.core.codec.signature.SignatureOptions;
 import com.github.charlemaznable.core.spring.ElvesImport;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import com.github.charlemaznable.httpclient.ohclient.OhScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.lang.Nullable;
 
-import static com.github.charlemaznable.core.spring.SpringFactory.springFactory;
-import static com.github.charlemaznable.httpclient.ohclient.OhFactory.ohLoader;
-
 @Configuration
 @ElvesImport
+@OhScan(basePackageClasses = BunnyOhClient.class)
 public class BunnyOhClientConfiguration {
-
-    @ConditionalOnMissingBean(BunnyOhClient.class)
-    @Bean("com.github.charlemaznable.bunny.client.ohclient.BunnyOhClient")
-    public BunnyOhClient bunnyOhClient() {
-        return ohLoader(springFactory()).getClient(BunnyOhClient.class);
-    }
 
     @Bean("com.github.charlemaznable.bunny.client.ohclient.BunnyOhClientUrlProvider")
     public BunnyOhClientUrlProvider bunnyOhClientUrlProvider(@Nullable BunnyClientConfig bunnyClientConfig) {

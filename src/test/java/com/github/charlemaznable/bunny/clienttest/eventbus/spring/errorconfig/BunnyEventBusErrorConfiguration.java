@@ -14,8 +14,8 @@ import static com.github.charlemaznable.httpclient.ohclient.OhFactory.springOhLo
 import static org.joor.Reflect.on;
 
 @Configuration
-@VertxImport
 @BunnyEventBusImport
+@VertxImport
 public class BunnyEventBusErrorConfiguration {
 
     @PostConstruct

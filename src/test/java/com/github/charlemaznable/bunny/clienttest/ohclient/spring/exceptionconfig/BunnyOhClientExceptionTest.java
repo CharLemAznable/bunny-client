@@ -10,6 +10,7 @@ import static com.github.charlemaznable.bunny.clienttest.mock.MockOhClientServer
 @SpringJUnitConfig(BunnyOhClientExceptionConfiguration.class)
 public class BunnyOhClientExceptionTest {
 
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
     private BunnyOhClient bunnyOhClient;
 
