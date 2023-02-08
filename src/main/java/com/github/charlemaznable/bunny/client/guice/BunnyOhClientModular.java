@@ -2,9 +2,7 @@ package com.github.charlemaznable.bunny.client.guice;
 
 import com.github.charlemaznable.bunny.client.config.BunnyClientConfig;
 import com.github.charlemaznable.bunny.client.ohclient.BunnyOhClient;
-import com.github.charlemaznable.bunny.client.ohclient.BunnyOhClientContentFormatter;
-import com.github.charlemaznable.bunny.client.ohclient.BunnyOhClientResponseParser;
-import com.github.charlemaznable.bunny.client.ohclient.BunnyOhClientUrlProvider;
+import com.github.charlemaznable.bunny.client.ohclient.BunnyOhClientConfigurer;
 import com.github.charlemaznable.core.codec.nonsense.NonsenseOptions;
 import com.github.charlemaznable.core.codec.signature.SignatureOptions;
 import com.github.charlemaznable.httpclient.ohclient.OhModular;
@@ -32,24 +30,15 @@ public final class BunnyOhClientModular extends AbstractBunnyModular<BunnyOhClie
     }
 
     public Module createModule() {
-        return new OhModular(this.configModule, new AbstractModule() {
+        return new OhModular(this.configModule,
+                new AbstractModule() {
 
-            @Provides
-            public BunnyOhClientUrlProvider bunnyOhClientUrlProvider(@Nullable BunnyClientConfig bunnyClientConfig) {
-                return new BunnyOhClientUrlProvider(bunnyClientConfig);
-            }
-
-            @Provides
-            public BunnyOhClientContentFormatter bunnyOhClientContentFormatter(@Nullable NonsenseOptions nonsenseOptions,
-                                                                               @Nullable SignatureOptions signatureOptions) {
-                return new BunnyOhClientContentFormatter(nonsenseOptions, signatureOptions);
-            }
-
-            @Provides
-            public BunnyOhClientResponseParser bunnyOhClientResponseParser(@Nullable NonsenseOptions nonsenseOptions,
+                    @Provides
+                    public BunnyOhClientConfigurer bunnyOhClientConfigurer(@Nullable BunnyClientConfig bunnyClientConfig,
+                                                                           @Nullable NonsenseOptions nonsenseOptions,
                                                                            @Nullable SignatureOptions signatureOptions) {
-                return new BunnyOhClientResponseParser(nonsenseOptions, signatureOptions);
-            }
-        }).bindClasses(BunnyOhClient.class).createModule();
+                        return new BunnyOhClientConfigurer(bunnyClientConfig, nonsenseOptions, signatureOptions);
+                    }
+                }).bindClasses(BunnyOhClient.class).createModule();
     }
 }
