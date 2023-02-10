@@ -2,8 +2,14 @@ package com.github.charlemaznable.bunny.client.guice;
 
 import com.github.charlemaznable.bunny.client.config.BunnyClientConfig;
 import com.github.charlemaznable.bunny.client.ohclient.BunnyOhClient;
+import com.github.charlemaznable.bunny.client.ohclient.BunnyOhClientConfigurer;
+import com.github.charlemaznable.core.codec.nonsense.NonsenseOptions;
+import com.github.charlemaznable.core.codec.signature.SignatureOptions;
 import com.github.charlemaznable.httpclient.ohclient.OhModular;
+import com.google.inject.AbstractModule;
 import com.google.inject.Module;
+import com.google.inject.Provides;
+import org.springframework.lang.Nullable;
 
 public final class BunnyOhClientModular extends AbstractBunnyModular<BunnyOhClientModular> {
 
@@ -23,13 +29,15 @@ public final class BunnyOhClientModular extends AbstractBunnyModular<BunnyOhClie
         super(configModule);
     }
 
-    @Override
     public Module createModule() {
-        return new OhModular(super.createModule())
-                .bindClasses(BunnyOhClient.class).createModule();
-    }
-
-    public BunnyOhClient getClient() {
-        return new OhModular(super.createModule()).getClient(BunnyOhClient.class);
+        return new OhModular(this.configModule,
+                new AbstractModule() {
+                    @Provides
+                    public BunnyOhClientConfigurer bunnyOhClientConfigurer(@Nullable BunnyClientConfig bunnyClientConfig,
+                                                                           @Nullable NonsenseOptions nonsenseOptions,
+                                                                           @Nullable SignatureOptions signatureOptions) {
+                        return new BunnyOhClientConfigurer(bunnyClientConfig, nonsenseOptions, signatureOptions);
+                    }
+                }).bindClasses(BunnyOhClient.class).createModule();
     }
 }

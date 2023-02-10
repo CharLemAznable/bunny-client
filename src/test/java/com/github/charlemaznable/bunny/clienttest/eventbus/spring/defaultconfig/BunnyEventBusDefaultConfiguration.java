@@ -10,8 +10,8 @@ import static com.github.charlemaznable.core.spring.SpringFactory.springFactory;
 import static com.github.charlemaznable.httpclient.ohclient.OhFactory.springOhLoader;
 import static org.joor.Reflect.on;
 
-@VertxImport
 @BunnyEventBusImport
+@VertxImport
 public class BunnyEventBusDefaultConfiguration {
 
     @PostConstruct

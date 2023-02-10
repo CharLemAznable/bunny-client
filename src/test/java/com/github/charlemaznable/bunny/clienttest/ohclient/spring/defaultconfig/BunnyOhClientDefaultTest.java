@@ -7,10 +7,10 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import static com.github.charlemaznable.bunny.clienttest.mock.MockOhClientServer.testDefaultServer;
 
-@SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 @SpringJUnitConfig(BunnyOhClientDefaultConfiguration.class)
 public class BunnyOhClientDefaultTest {
 
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
     private BunnyOhClient bunnyOhClient;
 
