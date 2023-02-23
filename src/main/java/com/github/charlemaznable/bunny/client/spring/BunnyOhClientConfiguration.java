@@ -8,12 +8,18 @@ import com.github.charlemaznable.core.codec.signature.SignatureOptions;
 import com.github.charlemaznable.core.spring.ElvesImport;
 import com.github.charlemaznable.httpclient.ohclient.OhScan;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.lang.Nullable;
 
 @Configuration
 @ElvesImport
-@OhScan(basePackageClasses = BunnyOhClient.class)
+@OhScan(basePackageClasses = BunnyOhClient.class,
+        includeFilters = {@ComponentScan.Filter(
+                type = FilterType.ASSIGNABLE_TYPE,
+                classes = {BunnyOhClient.class}
+        )})
 public class BunnyOhClientConfiguration {
 
     @Bean("com.github.charlemaznable.bunny.client.ohclient.BunnyOhClientConfigurer")
