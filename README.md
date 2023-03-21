@@ -37,7 +37,7 @@ with baby lambs across sunny green meadows.
 <dependency>
   <groupId>com.github.charlemaznable</groupId>
   <artifactId>bunny-client</artifactId>
-  <version>2023.0.3</version>
+  <version>2023.0.4</version>
 </dependency>
 ```
 
@@ -47,6 +47,6 @@ with baby lambs across sunny green meadows.
 <dependency>
   <groupId>com.github.charlemaznable</groupId>
   <artifactId>bunny-client</artifactId>
-  <version>2023.0.4-SNAPSHOT</version>
+  <version>2023.0.5-SNAPSHOT</version>
 </dependency>
 ```
